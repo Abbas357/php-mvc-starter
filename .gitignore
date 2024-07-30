@@ -1,0 +1,45 @@
+# Ignore the vendor directory created by Composer
+/vendor/
+
+# Ignore dependency directories for package managers
+/node_modules/
+
+# Ignore environment variable files
+.env
+
+# Ignore log files
+*.log
+
+# Ignore compiled files
+*.php~
+
+# Ignore IDE and editor specific files
+*.sublime-project
+*.sublime-workspace
+*.idea/
+*.vscode/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore backup files
+*.bak
+*.swp
+
+# Ignore cache files
+*.cache
+*.tmp
+
+# Ignore coverage reports
+coverage/
+
+# Ignore PHPUnit and other test reports
+phpunit.xml
+phpunit.xml.dist
+
+# Ignore other project-specific files
+*.tar.gz
+*.zip
+*.rar
+*.7z
