@@ -1,9 +1,8 @@
 <?php
 require_once('core/init.php');
-if (!$main->checkAuth()) $main->redirectTo('login');
+if ($main->checkAuth()) $main->redirectTo('index');
 function layoutTop($pageTitle = 'Page', $additionalCSS = [])
 {
-    global $main;
     echo "<!DOCTYPE html>
         <html lang='en'>
         <head>
@@ -15,24 +14,18 @@ function layoutTop($pageTitle = 'Page', $additionalCSS = [])
         }
     }
     echo "</head>
-        <body>
-        <!--[if lt IE 10]>
-        <div class='page-message' role='alert'>You are using an <strong>outdated</strong> browser. Please <a class='alert-link' href='http://browsehappy.com/'>upgrade your browser</a> to improve your experience and security.</div>
-        <![endif]-->
-            <div class='app'>
-            ";
-    require_once 'includes/topbar.php';
-    require_once 'includes/aside.php';
-    echo "<main class='app-main'>
-    ";
+            <body>
+            <!--[if lt IE 10]>
+            <div class='page-message' role='alert'>You are using an <strong>outdated</strong> browser. Please <a class='alert-link' href='http://browsehappy.com/'>upgrade your browser</a> to improve your experience and security.</div>
+            <![endif]-->";
 }
 
 function layoutBottom($additionalJS = [])
 {
-    require_once 'includes/footer.php';
-    echo "</main>
-            </div>";
-    require_once 'includes/scripts.php';
+    echo "<script src='assets/vendor/jquery/jquery.min.js'></script>
+    <script src='assets/vendor/bootstrap/js/popper.min.js'></script>
+    <script src='assets/vendor/bootstrap/js/bootstrap.min.js'></script>
+    <script src='assets/javascript/theme.js'></script>";
     if (!empty($additionalJS)) {
         foreach ($additionalJS as $script) {
             echo "<script src='$script'></script>";

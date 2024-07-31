@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <title> Error 404: Page not found | C&W Department, KP </title>
-    <?php include_once 'includes/head.php'; ?>
+    <?php require_once 'includes/head.php'; ?>
   </head>
   <body>
     <!--[if lt IE 10]>

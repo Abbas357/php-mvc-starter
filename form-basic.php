@@ -1,5 +1,5 @@
 <?php
-include_once 'layout/base.php';
+require_once 'layout/base.php';
 layoutTop('Basic Form');
 ?>
 <div class="wrapper">
@@ -1346,7 +1346,7 @@ layoutTop('Basic Form');
         </div><!-- /.card -->
       </div><!-- /.page-section -->
       <!-- .app-footer -->
-      <?php include_once 'includes/footer.php'; ?><!-- /.app-footer -->
+      <?php require_once 'includes/footer.php'; ?><!-- /.app-footer -->
     </div><!-- /.page-inner -->
     <!-- .page-sidebar -->
     <div class="page-sidebar page-sidebar-fixed">

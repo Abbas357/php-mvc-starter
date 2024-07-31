@@ -11813,7 +11813,7 @@ hljs.registerLanguage('php', function(hljs) {
     aliases: ['php3', 'php4', 'php5', 'php6'],
     case_insensitive: true,
     keywords:
-      'and include_once list abstract global private echo interface as static endswitch ' +
+      'and require_once list abstract global private echo interface as static endswitch ' +
       'array null if endwhile or const for endforeach self var while isset public ' +
       'protected exit foreach throw elseif include __FILE__ empty require_once do xor ' +
       'return parent clone use __CLASS__ __LINE__ else break print eval new ' +

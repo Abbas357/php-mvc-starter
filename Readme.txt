@@ -7,6 +7,8 @@
 
 Implement Roles and permissions
 
+        $value = password_hash('password', PASSWORD_DEFAULT);
+
     Step #1:  Assign Roles to Users
 
         $userId = 1; // Example user ID

@@ -1,5 +1,5 @@
 <?php
-include_once 'layout/base.php';
+require_once 'layout/base.php';
 layoutTop('Steps');
 ?>
 

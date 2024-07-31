@@ -1,5 +1,5 @@
 <?php
-include_once 'layout/base.php';
+require_once 'layout/base.php';
 layoutTop('Editors', [
   "assets/vendor/summernote/summernote-bs4.css",
   "assets/vendor/highlightjs/styles/github.css",

@@ -1,113 +1,68 @@
 <?php
 class User extends Main {
+
+    function __construct($pdo) {
+        $this->pdo = $pdo;
+        
+        if(!isset($_SESSION)){
+            session_start();
+        }
+    }
+
+    public function search($search) {
+        $sql = "SELECT * FROM `users` WHERE (`name` LIKE :search OR `email` LIKE :search OR `designation` LIKE :search OR `office` LIKE :search) AND `status` = 1";
+        return $this->executeQuery($sql, [':search' => $search . '%']);
+    }
+
+    public function login($email, $password) {
+        $sql = "SELECT `id`, `password` FROM `users` WHERE `email` = :email";
+        $user = $this->executeQuery($sql, [':email' => $email], PDO::FETCH_OBJ);
+        if ($user && password_verify($password, $user[0]->password)) {
+            print_r($user[0]->password);
+            $_SESSION['user_id'] = $user[0]->id;
+            $this->redirectTo('index');
+            exit();
+        }
+        return false;
+    }
+
+    public function userData($id) {
+        $sql = "SELECT * FROM `users` WHERE `id` = :id";
+        $user = $this->executeQuery($sql, [':id' => $id]);
+        return $user ? $user[0] : null;
+    }
+
+    public function logout() {
+        $_SESSION = [];
+        session_destroy();
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'success']);
+            exit;
+        } else {
+            header('Location: login');
+            exit;
+        }
+    }
+
+    public function checkUsername($username) {
+        return $this->checkExistence('username', $username);
+    }
+
+    public function checkEmail($email) {
+        return $this->checkExistence('email', $email);
+    }
+
+    public function checkStatus($id) {
+        $sql = "SELECT `status` FROM `users` WHERE `id` = :id";
+        $user = $this->executeQuery($sql, [':id' => $id], PDO::FETCH_OBJ);
+        return !empty($user) && $user[0]->status;
+    }
+
+    public function userIdByEmail($email) {
+        $sql = "SELECT `id` FROM `users` WHERE `email` = :email";
+        $user = $this->executeQuery($sql, [':email' => $email], PDO::FETCH_OBJ);
+        return $user ? $user[0]->id : null;
+    }
 	
-	function __construct($pdo){
-		$this->pdo = $pdo;
-	}
-
-	public function search($search){
-		$stmt = $this->pdo->prepare("SELECT * FROM `users` WHERE (`name` LIKE ? OR `email` LIKE ? OR `designation` LIKE ? OR `office` LIKE ?) AND `status` = 1");
-		$stmt->bindValue(1, $search.'%', PDO::PARAM_STR);
-		$stmt->bindValue(2, $search.'%', PDO::PARAM_STR);
-		$stmt->execute();
-		return $stmt->fetchAll(PDO::FETCH_OBJ);
-	}
-
-	public function login($email, $password){
-		$stmt = $this->pdo->prepare("SELECT `id`, `password` FROM `users` WHERE `email` = :email");
-		$stmt->bindParam(":email", $email, PDO::PARAM_STR);
-		$stmt->execute();
-	
-		$user = $stmt->fetch(PDO::FETCH_OBJ);
-
-		// Storing hash password like below
-		// $password = 'user_password_here'; // The plain text password
-		// $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-		
-		if ($user && password_verify($password, $user->password)) {
-			$_SESSION['user_id'] = $user->id;
-			header('Location: index.php');
-		} else {
-			return false;
-		}
-	}	
-
-	public function userData($id){
-		$stmt = $this->pdo->prepare("SELECT * FROM `users` WHERE `id` = :id");
-		$stmt->bindParam("id", $id, PDO::PARAM_INT);
-		$stmt->execute();
-		return $stmt->fetch(PDO::FETCH_OBJ);
-	}
-
-	public function logout(){
-		$_SESSION = array();
-		session_destroy();
-		header('Location: '.BASE_URL.'index.php');
-	}
-
-
-	public function checkUsername($username){
-		$stmt = $this->pdo->prepare("SELECT `username` FROM `users` WHERE `username` = :username");
-		$stmt->bindParam(":username", $username, PDO::PARAM_STR);
-		$stmt->execute();
-
-		$count = $stmt->rowCount();
-		if($count > 0){
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	public function checkPassword($password){
-		$stmt = $this->pdo->prepare("SELECT `password` FROM `users` WHERE `password` = :password");
-		$stmt->bindParam(":password", md5($password), PDO::PARAM_STR);
-		$stmt->execute();
-
-		$count = $stmt->rowCount();
-		if($count > 0){
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	public function checkEmail($email){
-		$stmt = $this->pdo->prepare("SELECT `email` FROM `users` WHERE `email` = :email");
-		$stmt->bindParam(":email", $email, PDO::PARAM_STR);
-		$stmt->execute();
-
-		$count = $stmt->rowCount();
-		if($count > 0){
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	public function loggedIn(){
-		return (isset($_SESSION['user_id'])) ? true : false;
-	}
-
-	public function checkStatus($id){
-		$stmt = $this->pdo->prepare("SELECT * FROM `users` WHERE `id` = :id");
-		$stmt->bindParam(":id", $id, PDO::PARAM_INT);
-		$stmt->execute();
-		$user = $stmt->fetch(PDO::FETCH_OBJ);
-		if($user->status){
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	public function userIdByEmail($email){
-		$stmt = $this->pdo->prepare("SELECT `id` FROM `users` WHERE `email` = :email");
-		$stmt->bindParam(":email", $email, PDO::PARAM_STR);
-		$stmt->execute();
-		$user = $stmt->fetch(PDO::FETCH_OBJ);
-		return $user->id;
-	}
-
 }
-?>

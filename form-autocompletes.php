@@ -1,5 +1,5 @@
 <?php
-include_once 'layout/base.php';
+require_once 'layout/base.php';
 layoutTop('Input Autocompletes', [
   "assets/vendor/select2/css/select2.min.css",
   "assets/vendor/tributejs/tribute.css",

@@ -1,5 +1,5 @@
 <?php
-include_once 'layout/base.php';
+require_once 'layout/base.php';
 layoutTop('Header without Search', [
   "assets/vendor/flatpickr/flatpickr.min.css"
 ]);

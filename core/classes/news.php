@@ -44,4 +44,3 @@ class News extends Main {
 	}
 
 }
-?>

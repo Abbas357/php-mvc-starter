@@ -5,3 +5,4 @@
 <script src="assets/vendor/stacked-menu/stacked-menu.min.js"></script>
 <script src="assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="assets/javascript/theme.min.js"></script>
+<script src="assets/javascript/custom.js"></script>

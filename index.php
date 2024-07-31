@@ -1,5 +1,5 @@
 <?php
-include_once 'layout/base.php';
+require_once 'layout/base.php';
 layoutTop('Home Page', [
   "assets/vendor/flatpickr/flatpickr.min.css"
 ]);

@@ -1,5 +1,5 @@
 <?php
-include_once 'layout/base.php';
+require_once 'layout/base.php';
 layoutTop('Filter Columns', [
   "assets/vendor/datatables/extensions/buttons/buttons.bootstrap4.min.css"
 ]);
