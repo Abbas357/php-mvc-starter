@@ -47,27 +47,27 @@ class Main {
 		}
 	}
 
-	public function create($table, $fields = array()){
-		if (empty($fields)) {
-			throw new InvalidArgumentException("No fields provided for insertion.");
-		}
-	
-		$columns = implode(',', array_keys($fields));
-		$placeholders = ':' . implode(', :', array_keys($fields));
-		$sql = "INSERT INTO {$table} ({$columns}) VALUES ({$placeholders})";
-	
-		try {
-			$stmt = $this->pdo->prepare($sql);
-			foreach ($fields as $key => $data) {
-				$stmt->bindValue(':'.$key, $data);
-			}
-			$stmt->execute();
-			return $this->pdo->lastInsertId();
-		} catch (PDOException $e) {
-			error_log($e->getMessage());
-			return false;
-		}
-	}
+	public function create($table, $fields = array()) {
+        if (empty($fields)) {
+            throw new InvalidArgumentException("No fields provided for insertion.");
+        }
+
+        $columns = implode(',', array_keys($fields));
+        $placeholders = ':' . implode(', :', array_keys($fields));
+        $sql = "INSERT INTO {$table} ({$columns}) VALUES ({$placeholders})";
+
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            foreach ($fields as $key => $data) {
+                $stmt->bindValue(':'.$key, $data);
+            }
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
 
 	public function update($table, $fieldName, $id, $fields = array()){
 		if (empty($fields)) {
@@ -135,60 +135,127 @@ class Main {
         return !empty($result);
     }
 
-	public function uploadImage($file, $directory = 'users'){
+	public function uploadImage($file, $directory = 'uploads/images/') {
 		$filename = basename($file['name']);
 		$fileTmp = $file['tmp_name'];
 		$fileSize = $file['size'];
 		$error = $file['error'];
-		$ext = explode('.', $filename);
-		$ext = strtolower(end($ext));
-		$allowed_ext = array('jpg', 'png', 'jpeg');
+		$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+		$allowed_ext = array('jpg', 'png', 'jpeg', 'gif'); // Added 'gif' to the allowed extensions
 	
-		if (in_array($ext, $allowed_ext) === true) {
+		// Validate the file extension
+		if (in_array($ext, $allowed_ext)) {
 			if ($error === 0) {
-				if ($fileSize <= 2097152) {
-					if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/'.$directory)) {
-						mkdir($_SERVER['DOCUMENT_ROOT'].'/'.$directory, 0755, true);
+				if ($fileSize <= 2097152) { // 2MB limit
+					$uploadDir = __DIR__ . '/' . $directory; // Use __DIR__ to get the current directory
+					if (!is_dir($uploadDir)) {
+						mkdir($uploadDir, 0755, true); // Create directory if it does not exist
 					}
 					$fileRoot = $directory . '/' . $filename;
-					move_uploaded_file($fileTmp, $_SERVER['DOCUMENT_ROOT'].'/'.$fileRoot);
-					return $fileRoot;
+					$filePath = $uploadDir . '/' . $filename;
+	
+					// Move the uploaded file
+					if (move_uploaded_file($fileTmp, $filePath)) {
+						return $fileRoot; // Return the relative path
+					} else {
+						$GLOBALS['imageError'] = "Failed to move uploaded file.";
+					}
 				} else {
-					$GLOBALS['imageError'] = "The file size is too large";
+					$GLOBALS['imageError'] = "The file size is too large.";
 				}
+			} else {
+				$GLOBALS['imageError'] = "Error occurred during file upload.";
 			}
 		} else {
-			$GLOBALS['imageError'] = "The extension is not allowed";
+			$GLOBALS['imageError'] = "The file extension is not allowed.";
 		}
+		return false;
 	}
 	
-	public function uploadDocument($file, $directory = 'documents') {
+	public function uploadDocument($file, $directory = 'uploads/documents') {
 		$filename = basename($file['name']);
 		$fileTmp = $file['tmp_name'];
 		$fileSize = $file['size'];
 		$error = $file['error'];
 	
-		$ext = explode('.', $filename);
-		$ext = strtolower(end($ext));
+		$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 		$allowed_ext = array('doc', 'docx', 'xls', 'xlsx', 'pdf', 'txt');
 	
-		if (in_array($ext, $allowed_ext) === true) {
+		if (in_array($ext, $allowed_ext)) {
 			if ($error === 0) {
-				if ($fileSize <= 10485760) { 
-					if (!is_dir($_SERVER['DOCUMENT_ROOT'].'/'.$directory)) {
-						mkdir($_SERVER['DOCUMENT_ROOT'].'/'.$directory, 0755, true);
+				if ($fileSize <= 10485760) { // 10MB limit
+					$uploadDir = __DIR__ . '/' . $directory; // Use __DIR__ to get the current script's directory
+					if (!is_dir($uploadDir)) {
+						mkdir($uploadDir, 0755, true); // Create the directory if it does not exist
 					}
 					$fileRoot = $directory . '/' . $filename;
-					move_uploaded_file($fileTmp, $_SERVER['DOCUMENT_ROOT'].'/'.$fileRoot);
-					return $fileRoot;
+					$filePath = $uploadDir . '/' . $filename;
+	
+					if (move_uploaded_file($fileTmp, $filePath)) {
+						return $fileRoot; // Return the relative path
+					} else {
+						$GLOBALS['documentError'] = "Failed to move uploaded file.";
+					}
 				} else {
-					$GLOBALS['documentError'] = "The file size is too large";
+					$GLOBALS['documentError'] = "The file size is too large.";
 				}
+			} else {
+				$GLOBALS['documentError'] = "Error occurred during file upload.";
 			}
 		} else {
-			$GLOBALS['documentError'] = "The extension is not allowed";
+			$GLOBALS['documentError'] = "The file extension is not allowed.";
 		}
+		return false;
 	}
+	
+	public function uploadFile($file, $directory = 'uploads', $type = 'image') {
+		$filename = basename($file['name']);
+		$fileTmp = $file['tmp_name'];
+		$fileSize = $file['size'];
+		$error = $file['error'];
+		
+		// Determine allowed extensions and size limits based on file type
+		if ($type === 'image') {
+			$allowed_ext = array('jpg', 'png', 'jpeg', 'gif');
+			$size_limit = 2097152; // 2MB limit
+		} elseif ($type === 'document') {
+			$allowed_ext = array('doc', 'docx', 'xls', 'xlsx', 'pdf', 'txt');
+			$size_limit = 10485760; // 10MB limit
+		} else {
+			$GLOBALS['fileError'] = "Invalid file type.";
+			return false;
+		}
+	
+		$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+	
+		// Validate the file extension
+		if (in_array($ext, $allowed_ext)) {
+			if ($error === 0) {
+				if ($fileSize <= $size_limit) {
+					$uploadDir = __DIR__ . '/' . $directory; // Use __DIR__ to get the current directory
+					if (!is_dir($uploadDir)) {
+						mkdir($uploadDir, 0755, true); // Create directory if it does not exist
+					}
+					$fileRoot = $directory . '/' . $filename;
+					$filePath = $uploadDir . '/' . $filename;
+	
+					// Move the uploaded file
+					if (move_uploaded_file($fileTmp, $filePath)) {
+						return $fileRoot; // Return the relative path
+					} else {
+						$GLOBALS['fileError'] = "Failed to move uploaded file.";
+					}
+				} else {
+					$GLOBALS['fileError'] = "The file size is too large.";
+				}
+			} else {
+				$GLOBALS['fileError'] = "Error occurred during file upload.";
+			}
+		} else {
+			$GLOBALS['fileError'] = "The file extension is not allowed.";
+		}
+		return false;
+	}	
 	
 	public function timeAgo($datetime) {
 		$time = strtotime($datetime);
