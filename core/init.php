@@ -4,7 +4,8 @@ require 'classes/main.php';
 require 'classes/user.php';
 require 'classes/news.php';
 
-const BASE_URL = 'http://localhost/cwmis/';
+define('BASE_URL', 'http://localhost/cwmis/');
+define('BASE_DIR', $_SERVER['DOCUMENT_ROOT'] . '/cwmis');
 
 global $pdo;
 

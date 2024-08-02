@@ -135,28 +135,38 @@ class Main {
         return !empty($result);
     }
 
+	protected function generateName($ext, $prefix = 'file_') {
+		$uniqueId = uniqid($prefix);
+		$filename = $uniqueId . '.' . $ext;
+		$counter = 1;
+		while (file_exists($filename)) {
+			$filename = $uniqueId . '_' . $counter . '.' . $ext;
+			$counter++;
+		}
+		return $filename;
+	}
+
 	public function uploadImage($file, $directory = 'uploads/images/') {
 		$filename = basename($file['name']);
 		$fileTmp = $file['tmp_name'];
 		$fileSize = $file['size'];
 		$error = $file['error'];
 		$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-		$allowed_ext = array('jpg', 'png', 'jpeg', 'gif'); // Added 'gif' to the allowed extensions
-	
-		// Validate the file extension
+		$allowed_ext = array('jpg', 'png', 'jpeg', 'gif');
+		
 		if (in_array($ext, $allowed_ext)) {
 			if ($error === 0) {
 				if ($fileSize <= 2097152) { // 2MB limit
-					$uploadDir = __DIR__ . '/' . $directory; // Use __DIR__ to get the current directory
+					$uploadDir = BASE_DIR . '/' . $directory;
 					if (!is_dir($uploadDir)) {
-						mkdir($uploadDir, 0755, true); // Create directory if it does not exist
+						mkdir($uploadDir, 0755, true);
 					}
-					$fileRoot = $directory . '/' . $filename;
-					$filePath = $uploadDir . '/' . $filename;
+					$uniqueFilename = $this->generateName($ext, 'img_');
+					$fileRoot = $directory . '/' . $uniqueFilename;
+					$filePath = $uploadDir . '/' . $uniqueFilename;
 	
-					// Move the uploaded file
 					if (move_uploaded_file($fileTmp, $filePath)) {
-						return $fileRoot; // Return the relative path
+						return $fileRoot;
 					} else {
 						$GLOBALS['imageError'] = "Failed to move uploaded file.";
 					}
@@ -170,7 +180,7 @@ class Main {
 			$GLOBALS['imageError'] = "The file extension is not allowed.";
 		}
 		return false;
-	}
+	}	
 	
 	public function uploadDocument($file, $directory = 'uploads/documents') {
 		$filename = basename($file['name']);
@@ -184,15 +194,16 @@ class Main {
 		if (in_array($ext, $allowed_ext)) {
 			if ($error === 0) {
 				if ($fileSize <= 10485760) { // 10MB limit
-					$uploadDir = __DIR__ . '/' . $directory; // Use __DIR__ to get the current script's directory
+					$uploadDir = BASE_DIR . '/' . $directory;
 					if (!is_dir($uploadDir)) {
-						mkdir($uploadDir, 0755, true); // Create the directory if it does not exist
+						mkdir($uploadDir, 0755, true);
 					}
-					$fileRoot = $directory . '/' . $filename;
-					$filePath = $uploadDir . '/' . $filename;
+					$uniqueFilename = $this->generateName($ext, 'doc_');
+					$fileRoot = $directory . '/' . $uniqueFilename;
+					$filePath = $uploadDir . '/' . $uniqueFilename;
 	
 					if (move_uploaded_file($fileTmp, $filePath)) {
-						return $fileRoot; // Return the relative path
+						return $fileRoot;
 					} else {
 						$GLOBALS['documentError'] = "Failed to move uploaded file.";
 					}
@@ -214,7 +225,6 @@ class Main {
 		$fileSize = $file['size'];
 		$error = $file['error'];
 		
-		// Determine allowed extensions and size limits based on file type
 		if ($type === 'image') {
 			$allowed_ext = array('jpg', 'png', 'jpeg', 'gif');
 			$size_limit = 2097152; // 2MB limit
@@ -228,20 +238,19 @@ class Main {
 	
 		$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 	
-		// Validate the file extension
 		if (in_array($ext, $allowed_ext)) {
 			if ($error === 0) {
 				if ($fileSize <= $size_limit) {
-					$uploadDir = __DIR__ . '/' . $directory; // Use __DIR__ to get the current directory
+					$uploadDir = BASE_DIR . '/' . $directory;
 					if (!is_dir($uploadDir)) {
-						mkdir($uploadDir, 0755, true); // Create directory if it does not exist
+						mkdir($uploadDir, 0755, true);
 					}
-					$fileRoot = $directory . '/' . $filename;
-					$filePath = $uploadDir . '/' . $filename;
+					$uniqueFilename = $this->generateName($ext);
+					$fileRoot = $directory . '/' . $uniqueFilename;
+					$filePath = $uploadDir . '/' . $uniqueFilename;
 	
-					// Move the uploaded file
 					if (move_uploaded_file($fileTmp, $filePath)) {
-						return $fileRoot; // Return the relative path
+						return $fileRoot;
 					} else {
 						$GLOBALS['fileError'] = "Failed to move uploaded file.";
 					}
