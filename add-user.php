@@ -4,10 +4,7 @@ layoutTop('Basic Form');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  // Check if required fields are not empty
   if (!empty($_POST['email']) && !empty($_POST['password'])) {
-      // print_r($_POST);
-      // die;
       $name = $main->checkInput($_POST['name']);
       $email = $main->checkInput($_POST['email']);
       $password = $main->checkInput($_POST['password']);

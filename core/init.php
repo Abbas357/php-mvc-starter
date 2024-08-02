@@ -4,6 +4,8 @@ require 'classes/main.php';
 require 'classes/user.php';
 require 'classes/news.php';
 
+const BASE_URL = 'http://localhost/cwmis/';
+
 global $pdo;
 
 if(!isset($_SESSION)){
@@ -13,5 +15,3 @@ if(!isset($_SESSION)){
 $main = new Main($pdo);
 $user = new User($pdo);
 $news = new News($pdo);
-
-const BASE_URL = 'http://localhost/cwmis/';
