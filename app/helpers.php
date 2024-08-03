@@ -1,5 +1,11 @@
 <?php
 
+function request() {
+    return new \App\Support\Request;
+}
+function response() {
+    return new \App\Support\Response;
+}
 function pdo() {
     static $pdo = null;
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use PDO;
+use App\Support\Storage;
 class User extends Model
 {
     public function __construct() {
@@ -23,17 +24,51 @@ class User extends Model
         return $this->checkExistence('email', $email);
     }
 
-    public function checkStatus($id)
+    public function createUser($request)
     {
-        $sql = "SELECT `status` FROM `users` WHERE `id` = :id";
-        $user = $this->executeQuery($sql, [':id' => $id], PDO::FETCH_OBJ);
-        return !empty($user) && $user[0]->status;
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        if (empty($email) || empty($password)) {
+            return ['success' => false, 'message' => 'Email and password are required fields.'];
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return ['success' => false, 'message' => 'Invalid email format.'];
+        }
+
+        $data = [
+            'name' => $request->input('name'),
+            'email' => $email,
+            'password' => $password,
+            'mobile_number' => $request->input('mobile_number'),
+            'office' => $request->input('office'),
+            'designation' => $request->input('designation'),
+        ];
+
+        $file = $request->hasFile('profile_pic') ? $request->file('profile_pic') : null;
+        $data['profile_pic'] = $this->handleFileUpload($file);
+
+        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+
+        $insertedId = $this->create($data);
+        if ($insertedId) {
+            return ['success' => true, 'message' => "User created successfully with ID: " . $insertedId];
+        } else {
+            return ['success' => false, 'message' => 'There was an error creating the user.'];
+        }
     }
 
-    public function userIdByEmail($email)
+    private function handleFileUpload($file)
     {
-        $sql = "SELECT `id` FROM `users` WHERE `email` = :email";
-        $user = $this->executeQuery($sql, [':email' => $email], PDO::FETCH_OBJ);
-        return $user ? $user[0]->id : null;
+        if ($file && !empty($file['name'])) {
+            $uploadedPath = Storage::save($file, 'images/users', 'image');
+            if ($uploadedPath) {
+                return $uploadedPath;
+            } else {
+                throw new \Exception('Error uploading image.');
+            }
+        }
+        return null;
     }
 }

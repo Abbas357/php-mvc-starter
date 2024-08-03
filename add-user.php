@@ -2,62 +2,24 @@
 require_once 'layout/base.php';
 layoutTop('Basic Form');
 
-use App\Support\Storage;
 use App\Models\User;
-use App\Support\Request;
 
-// Instantiate the User model and Request class
-$user = new User;
-$request = new Request;
+$user = new User();
 
-if ($request->isPost()) {
-    $email = $request->input('email');
-    $password = $request->input('password');
-    
-    if (!empty($email) && !empty($password)) {
-        $name = $request->input('name');
-        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        $mobile_number = $request->input('mobile_number');
-        $office = $request->input('office');
-        $designation = $request->input('designation');
+if (request()->isPost()) {
+    try {
+        $result = $user->createUser(request());
 
-        $profilePicPath = null;
-        if ($request->hasFile('profile_pic')) {
-            $uploadedPath = Storage::save($request->file('profile_pic'), 'images/users', 'image');
-            if ($uploadedPath) {
-                $profilePicPath = $uploadedPath;
-            } else {
-                $error = $GLOBALS['imageError'] ?? 'Error uploading image.';
-            }
-        }
-
-        if (empty($error)) {
-            $userData = [
-                'name' => $name,
-                'email' => $email,
-                'password' => $hashed_password,
-                'mobile_number' => $mobile_number,
-                'office' => $office,
-                'designation' => $designation,
-                'profile_pic' => $profilePicPath
-            ];
-
-            $insertedId = $user->create($userData);
-
-            if ($insertedId) {
-                echo "User created successfully with ID: " . $insertedId;
-            } else {
-                echo "There was an error creating the user.";
-            }
+        if ($result['success']) {
+            echo $result['message'];
         } else {
-            echo $error;
+            echo $result['message'];
         }
-    } else {
-        echo "Email and password are required fields.";
+    } catch (\Exception $e) {
+        echo $e->getMessage();
     }
 }
 ?>
-
 
 <div class="wrapper">
   <div class="page has-sidebar has-sidebar-expand-xl">
