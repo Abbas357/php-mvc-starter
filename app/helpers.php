@@ -1,12 +1,15 @@
 <?php
 
-function request() {
+function request()
+{
     return new \App\Support\Request;
 }
-function response() {
+function response()
+{
     return new \App\Support\Response;
 }
-function pdo() {
+function pdo()
+{
     static $pdo = null;
 
     if ($pdo === null) {
@@ -26,20 +29,22 @@ function pdo() {
     return $pdo;
 }
 
-function authenticated(){
+function authenticated()
+{
     return (isset($_SESSION['user_id'])) ? true : false;
 }
 
-function authUser() {
+function authUser()
+{
     if (isset($_SESSION['user_id'])) {
         $userId = $_SESSION['user_id'];
         $sql = "SELECT * FROM users WHERE id = :id";
-        
+
         try {
             $stmt = $GLOBALS['pdo']->prepare($sql);
             $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             $result = $stmt->fetch(PDO::FETCH_OBJ);
             return $result ?: null;
         } catch (PDOException $e) {
@@ -50,8 +55,10 @@ function authUser() {
     return null;
 }
 
-function dd(...$vars) {
-    function formatVar($var, $depth = 0) {
+function dd(...$vars)
+{
+    function formatVar($var, $depth = 0)
+    {
         $indent = str_repeat('  ', $depth);
         if (is_array($var)) {
             $output = "Array (\n";
@@ -91,7 +98,7 @@ function dd(...$vars) {
     echo '<div class="dd-container">';
     echo '<div class="header">Dump:</div>';
     echo '<div class="file">Called from: ' . basename(debug_backtrace()[0]['file']) . ' on line ' . debug_backtrace()[0]['line'] . '</div>';
-    
+
     foreach ($vars as $var) {
         echo '<div class="type">Type: ' . gettype($var) . '</div>';
         echo '<pre>' . formatVar($var) . '</pre>';
@@ -122,10 +129,7 @@ function preventAccess($request, $currentFile, $currently)
 
 function redirectTo($path)
 {
-    if (!defined('BASE_URL')) {
-        throw new RuntimeException('BASE_URL is not defined.');
-    }
-    $url = rtrim(BASE_URL, '/') . '/' . ltrim($path, '/');
+    $url = rtrim(config('app.url'), '/') . '/' . ltrim($path, '/');
     if (headers_sent()) {
         throw new RuntimeException('Headers already sent.');
     }
@@ -185,7 +189,7 @@ function timeAgo($datetime)
 function logo($width = 250, $height = 60, $alt = 'Logo')
 {
     $path = 'assets/images/logo.png';
-    $basePath = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '';
+    $basePath = rtrim(config('app.url'), '/') . '/';
     $fullPath = $basePath . ltrim($path, '/');
     return sprintf(
         '<img src="%s" style="width:%dpx; height:%dpx" alt="%s" />',
@@ -204,9 +208,28 @@ function redirectIfDirectAccess()
     }
 }
 
+function config($key, $default = null) {
+    static $config;
+    if (!$config) {
+        $config = require __DIR__ . '/config.php';
+    }
+    $keys = explode('.', $key);
+    $value = $config;
+
+    foreach ($keys as $key) {
+        if (isset($value[$key])) {
+            $value = $value[$key];
+        } else {
+            return $default;
+        }
+    }
+
+    return $value;
+}
+
 function asset($type, $file)
 {
-    $baseUrl = defined('BASE_URL') ? BASE_URL : '';
+    $baseUrl = config('app.url');
 
     $validTypes = ['js', 'css', 'vendor'];
 
@@ -215,4 +238,27 @@ function asset($type, $file)
     }
 
     return $baseUrl . '/assets/' . $type . '/' . $file;
+}
+
+function env($key, $default = null)
+{
+    static $envVars = null;
+
+    if ($envVars === null) {
+        $envVars = [];
+        if (file_exists(__DIR__ . '/../.env')) {
+            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos(trim($line), '#') === 0) {
+                    continue;
+                }
+                list($name, $value) = explode('=', $line, 2);
+                $name = trim($name);
+                $value = trim($value);
+                $envVars[$name] = $value;
+            }
+        }
+    }
+
+    return $envVars[$key] ?? $default;
 }

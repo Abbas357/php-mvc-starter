@@ -17,8 +17,8 @@ class News extends Model
 
 	function getPostLinks($post){
 		$post = preg_replace("/(https?:\/\/)([\w]+.)([\w\.]+)/", "<a href='$0' target='_blank'>$0</a>", $post);
-		$post = preg_replace("/#([\w]+)/", "<a href='".BASE_URL."hashtag/$1' target='_blank'>$0</a>", $post);
-		$post = preg_replace("/@([\w]+)/", "<a href='".BASE_URL."$1' target='_blank'>$0</a>", $post);
+		$post = preg_replace("/#([\w]+)/", "<a href='".config('app.url')."hashtag/$1' target='_blank'>$0</a>", $post);
+		$post = preg_replace("/@([\w]+)/", "<a href='".config('app.url')."$1' target='_blank'>$0</a>", $post);
 		return $post;
 	}
 

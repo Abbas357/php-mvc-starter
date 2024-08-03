@@ -46,21 +46,23 @@ if (request()->isPost()) {
                 <div class="col-md-6 mb-3">
                   <label for="validationTooltip01">Name<abbr title="Required">*</abbr></label>
                   <input type="text" class="form-control" id="validationTooltip01" placeholder="Name" name="name" required="">
-                  <div class="valid-tooltip">Looks good!</div>
+                  <div class="invalid-feedback"> Name is required </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                <label for="validationTooltipUsername">Email <abbr title="Required">*</abbr></label>
-                <input type="email" class="form-control" id="validationTooltipUsername" name="email" placeholder="Email" aria-describedby="inputGroupPrepend" required="">
+                <label for="validationTooltipEmail">Email <abbr title="Required">*</abbr></label>
+                <input type="email" class="form-control" id="validationTooltipEmail" name="email" placeholder="Email" aria-describedby="inputGroupPrepend" required="">
                 <div id="inputGroupPrepend" class="invalid-tooltip">Please enter valid email</div>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="d-flex justify-content-between" for="lbl5"><span>Password</span> <a href="#lbl5" data-toggle="password"><i class="fa fa-eye fa-fw"></i> <span>Show</span></a></label> 
-                  <input type="password" class="form-control" name="password" id="lbl5">
+                  <input type="password" class="form-control" name="password" id="lbl5" required>
+                  <div class="invalid-feedback"> Password is required </div>
                 </div>
                 <div class="col-md-6 mb-3">
-                  <label for="validationTooltipUsername">Mobile Number</label>
-                  <input type="text" class="form-control" id="validationTooltipUsername" name="mobile_number" placeholder="Mobile Number" aria-describedby="inputGroupPrepend">
+                  <label for="validationTooltipMobileNumber">Mobile Number</label>
+                  <input type="text" class="form-control" id="validationTooltipMobileNumber" name="mobile_number" required placeholder="Mobile Number" aria-describedby="inputGroupPrepend">
                   <div id="inputGroupPrepend" class="invalid-tooltip"> Please enter Mobile Number</div>
+                  <div id="inputGroupPrepend" class="valid-tooltip"> Looks Good</div>
                 </div>
               </div>
               <div class="form-row">

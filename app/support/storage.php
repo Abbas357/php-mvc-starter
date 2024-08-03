@@ -4,16 +4,25 @@ namespace App\Support;
 
 class Storage
 {
-    protected static $storagePath = BASE_DIR . '/storage';
+    protected static $storagePath;
+
+    protected static function initialize()
+    {
+        if (self::$storagePath === null) {
+            self::$storagePath = config('app.dir') . '/storage';
+        }
+    }
 
     public static function put($file, $contents)
     {
+        self::initialize();
         $filePath = self::$storagePath . DIRECTORY_SEPARATOR . $file;
         return file_put_contents($filePath, $contents) !== false;
     }
 
     public static function get($file)
     {
+        self::initialize();
         $filePath = self::$storagePath . DIRECTORY_SEPARATOR . $file;
         if (file_exists($filePath)) {
             return file_get_contents($filePath);
@@ -23,6 +32,7 @@ class Storage
 
     public static function delete($file)
     {
+        self::initialize();
         $filePath = self::$storagePath . DIRECTORY_SEPARATOR . $file;
         if (file_exists($filePath)) {
             return unlink($filePath);
@@ -32,18 +42,21 @@ class Storage
 
     public static function exists($file)
     {
+        self::initialize();
         $filePath = self::$storagePath . DIRECTORY_SEPARATOR . $file;
         return file_exists($filePath);
     }
 
     public static function url($file)
-    {   
+    { 
+        self::initialize();  
         $filePath = self::$storagePath . DIRECTORY_SEPARATOR . $file;
         return file_exists($filePath) ? '/storage/' . $file : null;
     }
 
     public static function save($file, $directory = null, $type = 'image')
     {
+        self::initialize();
         $filename = basename($file['name']);
         $fileTmp = $file['tmp_name'];
         $fileSize = $file['size'];

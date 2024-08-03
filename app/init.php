@@ -7,9 +7,8 @@ require 'database/connection.php';
 
 global $pdo;
 
-define('BASE_URL', 'http://localhost/cwmis/');
-define('BASE_DIR', $_SERVER['DOCUMENT_ROOT'] . '/cwmis');
-
 if (!isset($_SESSION)) {
     session_start();
 }
+
+// dd(config('app.dir'));
