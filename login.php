@@ -4,27 +4,29 @@ layoutTop('Home Page', [
   "assets/vendor/flatpickr/flatpickr.min.css"
 ]);
 
-// if ($_SERVER['REQUEST_METHOD'] == "GET" && realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
-//   $main->redirectTo('index.php');
-// }
+use App\Support\Auth;
+
+use App\Models\User;
+$user = new User();
+
 if (isset($_POST['login']) && !empty($_POST['login'])) {
   $email = $_POST['email'];
   $password = $_POST['password'];
   $error = '';
 
   if (!empty($email) or !empty($password)) {
-    $email = $main->checkInput($email);
-    $password = $main->checkInput($password);
+    $email = checkInput($email);
+    $password = checkInput($password);
     
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
       $error = "Invalid format";
     } else {
       //submit form
-      if ($user->login($email, $password) === false) {
+      if (Auth::attempt($email, $password) === false) {
         $error = "The email or password is incorrect";
       } else {
-        $main->redirectTo('index.php');
+        redirectTo('index.php');
       }
     }
   } else {
@@ -36,7 +38,7 @@ if (isset($_POST['login']) && !empty($_POST['login'])) {
 
   <header id="auth-header" class="auth-header" style="background-image: url(assets/images/illustration/img-1.png);">
     <h1>
-      <?php echo Main::logo(); ?>
+      <?php echo logo(); ?>
       <span class="sr-only">Sign In</span>
     </h1>
     <p>Fill the Credentials</p>
@@ -76,6 +78,6 @@ if (isset($_POST['login']) && !empty($_POST['login'])) {
 </main>
 <?php layoutBottom([
   "assets/vendor/particles.js/particles.min.js",
-  "assets/javascript/pages/particles.js"
+  "assets/js/pages/particles.js"
 ])
 ?>

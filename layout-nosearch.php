@@ -506,6 +506,6 @@ layoutBottom([
     "assets/vendor/flatpickr/flatpickr.min.js",
     "assets/vendor/easy-pie-chart/jquery.easypiechart.min.js",
     "assets/vendor/chart.js/Chart.min.js",
-    "assets/javascript/pages/dashboard-demo.js"
+    "assets/js/pages/dashboard-demo.js"
 ]);
 ?>

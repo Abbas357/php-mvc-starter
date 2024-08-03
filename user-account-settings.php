@@ -39,9 +39,9 @@
     <link rel="stylesheet" href="assets/vendor/open-iconic/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.css"><!-- END PLUGINS STYLES -->
     <!-- BEGIN THEME STYLES -->
-    <link rel="stylesheet" href="assets/stylesheets/theme.min.css" data-skin="default">
-    <link rel="stylesheet" href="assets/stylesheets/theme-dark.min.css" data-skin="dark">
-    <link rel="stylesheet" href="assets/stylesheets/custom.css">
+    <link rel="stylesheet" href="assets/css/theme.min.css" data-skin="default">
+    <link rel="stylesheet" href="assets/css/theme-dark.min.css" data-skin="dark">
+    <link rel="stylesheet" href="assets/css/custom.css">
     <script>
       var skin = localStorage.getItem('skin') || 'default';
       var isCompact = JSON.parse(localStorage.getItem('hasCompactMenu'));
@@ -1565,6 +1565,6 @@
     <script src="assets/vendor/stacked-menu/stacked-menu.min.js"></script>
     <script src="assets/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script> <!-- END PLUGINS JS -->
     <!-- BEGIN THEME JS -->
-    <script src="assets/javascript/theme.min.js"></script> <!-- END THEME JS -->
+    <script src="assets/js/theme.min.js"></script> <!-- END THEME JS -->
   </body>
 </html>

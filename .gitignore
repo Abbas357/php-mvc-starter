@@ -4,7 +4,7 @@
 # Ignore dependency directories for package managers
 /node_modules/
 
-/uploads/
+/storage/
 
 # Ignore environment variable files
 .env

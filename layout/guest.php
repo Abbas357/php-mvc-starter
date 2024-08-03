@@ -1,6 +1,6 @@
 <?php
-require_once('core/init.php');
-if ($main->checkAuth()) $main->redirectTo('index');
+require_once('app/init.php');
+if (authenticated()) redirectTo('index');
 function layoutTop($pageTitle = 'Page', $additionalCSS = [])
 {
     echo "<!DOCTYPE html>
@@ -22,10 +22,10 @@ function layoutTop($pageTitle = 'Page', $additionalCSS = [])
 
 function layoutBottom($additionalJS = [])
 {
-    echo "<script src='assets/vendor/jquery/jquery.min.js'></script>
-    <script src='assets/vendor/bootstrap/js/popper.min.js'></script>
-    <script src='assets/vendor/bootstrap/js/bootstrap.min.js'></script>
-    <script src='assets/javascript/theme.js'></script>";
+    echo "<script src='" . asset('vendor/jquery', 'jquery.min.js') . "'></script>
+      <script src='" . asset('vendor/bootstrap/js', 'popper.min.js') . "'></script>
+      <script src='" . asset('vendor/bootstrap/js', 'bootstrap.min.js') . "'></script>
+      <script src='" . asset('js', 'theme.js') . "'></script>";
     if (!empty($additionalJS)) {
         foreach ($additionalJS as $script) {
             echo "<script src='$script'></script>";

@@ -365,8 +365,8 @@ layoutBottom([
     "assets/vendor/zxcvbn/zxcvbn.js",
     "assets/vendor/text-mask/vanillaTextMask.js",
     "assets/vendor/text-mask/addons/textMaskAddons.js",
-    "assets/javascript/pages/select2-demo.js",
-    "assets/javascript/pages/typeahead-demo.js",
-    "assets/javascript/pages/atwho-demo.js"
+    "assets/js/pages/select2-demo.js",
+    "assets/js/pages/typeahead-demo.js",
+    "assets/js/pages/atwho-demo.js"
 ]);
 ?>

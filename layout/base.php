@@ -1,6 +1,9 @@
 <?php
-require_once('core/init.php');
-if (!$main->checkAuth()) $main->redirectTo('login');
+require_once('app/init.php');
+// use App\Models\User;
+// $user = new User($pdo);
+// dd(authUser());
+if (!authenticated()) redirectTo('login');
 function layoutTop($pageTitle = 'Page', $additionalCSS = [])
 {
     global $main;

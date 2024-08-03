@@ -143,8 +143,8 @@ layoutTop('Invoices List');
 layoutBottom([
     "assets/vendor/datatables/jquery.dataTables.min.js",
     "assets/vendor/moment/moment.min.js",
-    "assets/javascript/pages/dataTables.bootstrap.js",
-    "assets/javascript/pages/datetime-moment.js",
-    "assets/javascript/pages/invoices-list-demo.js"
+    "assets/js/pages/dataTables.bootstrap.js",
+    "assets/js/pages/datetime-moment.js",
+    "assets/js/pages/invoices-list-demo.js"
 ]);
 ?>

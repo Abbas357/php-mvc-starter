@@ -1295,6 +1295,6 @@ layoutTop('Table Basic');
 </div><!-- .app-footer -->
 <?php 
 layoutBottom([
-    "assets/javascript/pages/table-demo.js"
+    "assets/js/pages/table-demo.js"
 ]);
 ?>

@@ -153,7 +153,7 @@ layoutBottom([
     "assets/vendor/simplemde/simplemde.min.js",
     "assets/vendor/ace/min/ace.js",
     "assets/vendor/ace/min/ext-statusbar.js",
-    "assets/javascript/pages/summernote-demo.js",
-    "assets/javascript/pages/ace-demo.js"
+    "assets/js/pages/summernote-demo.js",
+    "assets/js/pages/ace-demo.js"
 ]);
 ?>

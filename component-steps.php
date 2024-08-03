@@ -373,6 +373,6 @@ layoutBottom([
     "assets/vendor/text-mask/vanillaTextMask.js",
     "assets/vendor/text-mask/addons/textMaskAddons.js",
     "assets/vendor/bs-stepper/js/bs-stepper.min.js",
-    "assets/javascript/pages/steps-demo.js"
+    "assets/js/pages/steps-demo.js"
 ]);
 ?>

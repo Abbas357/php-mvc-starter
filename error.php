@@ -36,9 +36,9 @@
     <script>
       $(document).on('theme:init', () =>
       {
-        particlesJS.load('notfound-state', 'assets/javascript/pages/particles-error.json');
+        particlesJS.load('notfound-state', 'assets/js/pages/particles-error.json');
       })
     </script>
-    <script src="assets/javascript/theme.min.js"></script>
+    <script src="assets/js/theme.min.js"></script>
   </body>
 </html>

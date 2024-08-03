@@ -726,8 +726,8 @@ layoutBottom([
     "assets/vendor/blueimp-file-upload/js/jquery.fileupload-video.min.js",
     "assets/vendor/blueimp-file-upload/js/jquery.fileupload-validate.min.js",
     "assets/vendor/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js",
-    "assets/javascript/pages/colorpicker-demo.js",
-    "assets/javascript/pages/uploader-demo.js",
-    "assets/javascript/pages/slider-demo.js"
+    "assets/js/pages/colorpicker-demo.js",
+    "assets/js/pages/uploader-demo.js",
+    "assets/js/pages/slider-demo.js"
 ]);
 ?>

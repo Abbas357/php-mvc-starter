@@ -1,11 +1,13 @@
-<?php
-class News extends Main {
-
-	function __construct($pdo){
-		$this->pdo = $pdo;
-	}
-
-	public function getUserPosts($user_id){
+<?php 
+namespace App\Models;
+use PDO;
+class News extends Model
+{
+    public function __construct(PDO $pdo) {
+        parent::__construct($pdo);
+    }
+    
+    public function getUserPosts($user_id){
 		$stmt = $this->pdo->prepare("SELECT * FROM `posts` LEFT JOIN `users` ON `postBy` = `user_id` WHERE `postBy` = :user_id AND `shareID` = '0' AND `suspended` = 0 OR `shareBy` = :user_id ORDER BY `postID` DESC");
 		$stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
 		$stmt->execute();

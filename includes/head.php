@@ -21,9 +21,9 @@
 <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600" rel="stylesheet">
 <link rel="stylesheet" href="assets/vendor/open-iconic/css/open-iconic-bootstrap.min.css">
 <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.css">
-<link rel="stylesheet" href="assets/stylesheets/theme.min.css" data-skin="default">
-<link rel="stylesheet" href="assets/stylesheets/theme-dark.min.css" data-skin="dark">
-<link rel="stylesheet" href="assets/stylesheets/custom.css">
+<link rel="stylesheet" href="assets/css/theme.min.css" data-skin="default">
+<link rel="stylesheet" href="assets/css/theme-dark.min.css" data-skin="dark">
+<link rel="stylesheet" href="assets/css/custom.css">
 <script>
     var skin = localStorage.getItem('skin') || 'default';
     var isCompact = JSON.parse(localStorage.getItem('hasCompactMenu'));

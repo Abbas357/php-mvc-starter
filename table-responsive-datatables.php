@@ -63,7 +63,7 @@ layoutBottom([
     "assets/vendor/datatables/jquery.dataTables.min.js",
     "assets/vendor/datatables/extensions/responsive/dataTables.responsive.min.js",
     "assets/vendor/datatables/extensions/responsive/responsive.bootstrap4.min.js",
-    "assets/javascript/pages/dataTables.bootstrap.js",
-    "assets/javascript/pages/datatables-responsive-demo.js"
+    "assets/js/pages/dataTables.bootstrap.js",
+    "assets/js/pages/datatables-responsive-demo.js"
 ]);
 ?>

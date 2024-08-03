@@ -1,6 +1,6 @@
 <?php
-    require_once('../core/init.php');
-    $user->logout();
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'success']);
-?>
+require_once('../app/init.php');
+use App\Support\Auth;
+Auth::logout();
+header('Content-Type: application/json');
+echo json_encode(['status' => 'success']);

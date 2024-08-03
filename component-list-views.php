@@ -773,6 +773,6 @@ layoutTop('List Views', [
 <?php layoutBottom([
       "assets/vendor/jstree/jstree.min.js",
       "assets/vendor/toastr/toastr.min.js",
-      "assets/javascript/pages/jstree-demo.js"
+      "assets/js/pages/jstree-demo.js"
 ]);
 ?>

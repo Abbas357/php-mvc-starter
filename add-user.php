@@ -2,56 +2,63 @@
 require_once 'layout/base.php';
 layoutTop('Basic Form');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+use App\Support\Storage;
+use App\Models\User;
+use App\Support\Request;
 
-  if (!empty($_POST['email']) && !empty($_POST['password'])) {
-      $name = $main->checkInput($_POST['name']);
-      $email = $main->checkInput($_POST['email']);
-      $password = $main->checkInput($_POST['password']);
-      $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-      $mobile_number = $main->checkInput($_POST['mobile_number']);
-      $office = $main->checkInput($_POST['office']);
-      $designation = $main->checkInput($_POST['designation']);
-      $error = '';
+// Instantiate the User model and Request class
+$user = new User;
+$request = new Request;
 
-      $profilePicPath = null;
-      if (!empty($_FILES['profile_pic']['name'])) {
-          $uploadedPath = $main->uploadImage($_FILES['profile_pic'], 'uploads/images/users');
-          if ($uploadedPath) {
-              $profilePicPath = $uploadedPath;
-          } elseif (isset($GLOBALS['imageError'])) {
-              $error = $GLOBALS['imageError'];
-          }
-      }
+if ($request->isPost()) {
+    $email = $request->input('email');
+    $password = $request->input('password');
+    
+    if (!empty($email) && !empty($password)) {
+        $name = $request->input('name');
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+        $mobile_number = $request->input('mobile_number');
+        $office = $request->input('office');
+        $designation = $request->input('designation');
 
-      if (empty($error)) {
-          $userData = [
-              'name' => $name,
-              'email' => $email,
-              'password' => $hashed_password,
-              'mobile_number' => $mobile_number,
-              'office' => $office,
-              'designation' => $designation,
-              'profile_pic' => $profilePicPath
-          ];
+        $profilePicPath = null;
+        if ($request->hasFile('profile_pic')) {
+            $uploadedPath = Storage::save($request->file('profile_pic'), 'images/users', 'image');
+            if ($uploadedPath) {
+                $profilePicPath = $uploadedPath;
+            } else {
+                $error = $GLOBALS['imageError'] ?? 'Error uploading image.';
+            }
+        }
 
-          $insertedId = $main->create('users', $userData);
+        if (empty($error)) {
+            $userData = [
+                'name' => $name,
+                'email' => $email,
+                'password' => $hashed_password,
+                'mobile_number' => $mobile_number,
+                'office' => $office,
+                'designation' => $designation,
+                'profile_pic' => $profilePicPath
+            ];
 
-          if ($insertedId) {
-              echo "User created successfully with ID: " . $insertedId;
-          } else {
-              echo "There was an error creating the user.";
-          }
-      } else {
-          echo $error;
-      }
-  } else {
-      echo "Email and password are required fields.";
-  }
+            $insertedId = $user->create($userData);
+
+            if ($insertedId) {
+                echo "User created successfully with ID: " . $insertedId;
+            } else {
+                echo "There was an error creating the user.";
+            }
+        } else {
+            echo $error;
+        }
+    } else {
+        echo "Email and password are required fields.";
+    }
 }
-
-
 ?>
+
+
 <div class="wrapper">
   <div class="page has-sidebar has-sidebar-expand-xl">
     <div class="page-inner">

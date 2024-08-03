@@ -177,7 +177,7 @@ layoutBottom([
     "assets/vendor/datatables/extensions/buttons/buttons.bootstrap4.min.js",
     "assets/vendor/datatables/extensions/buttons/buttons.html5.min.js",
     "assets/vendor/datatables/extensions/buttons/buttons.print.min.js",
-    "assets/javascript/pages/dataTables.bootstrap.js",
-    "assets/javascript/pages/datatables-filters-demo.js"
+    "assets/js/pages/dataTables.bootstrap.js",
+    "assets/js/pages/datatables-filters-demo.js"
 ]);
 ?>
