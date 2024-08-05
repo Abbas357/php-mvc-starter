@@ -1,4 +1,3 @@
-RewriteEngine On
 <IfModule mime_module>
     DirectoryIndex index.php
     RewriteEngine On 
@@ -8,14 +7,3 @@ RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
-
-# <FilesMatch "^\.">
-#     Order Allow,Deny
-#     Deny from all
-# </FilesMatch>
-# <IfModule mod_rewrite.c>
-#     RewriteEngine On
-#     RewriteRule ^app/(.*)$ - [F]
-#     RewriteRule ^layout/(.*)$ - [F]
-#     RewriteRule ^includes/(.*)$ - [F]
-# </IfModule>
