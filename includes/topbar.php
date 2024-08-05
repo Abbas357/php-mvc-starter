@@ -5,8 +5,9 @@
         <div class="top-bar-brand">
             <!-- toggle aside menu -->
             <button class="hamburger hamburger-squeeze mr-2" type="button" data-toggle="aside-menu" aria-label="toggle aside menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button> <!-- /toggle aside menu -->
-            <a href="index.php">
-            <?php echo logo('150', '40'); ?></a>
+            <a href="<?php route('') ?>">
+                <img src="<?php asset('images/logo.png') ?>" width="150px" height="40px" alt="Logo">
+            </a>
         </div><!-- /.top-bar-brand -->
         <!-- .top-bar-list -->
         <div class="top-bar-list">
@@ -53,7 +54,7 @@
                                     <div class="list-group-item py-2">
                                         <a href="#" class="stretched-link"><span class="sr-only">Go to search result</span></a>
                                         <div class="user-avatar user-avatar-sm bg-muted">
-                                            <img src="assets/images/avatars/bootstrap.svg" alt="">
+                                            <img src="<?php asset('images/avatars/bootstrap.svg') ?>" alt="">
                                         </div>
                                         <div class="ml-2">
                                             <div class="mb-n1"> Bootstrap </div><small class="text-muted">Just now</small>
@@ -63,7 +64,7 @@
                                     <div class="list-group-item py-2">
                                         <a href="#" class="stretched-link"><span class="sr-only">Go to search result</span></a>
                                         <div class="user-avatar user-avatar-sm bg-muted">
-                                            <img src="assets/images/avatars/slack.svg" alt="">
+                                            <img src="<?php asset('images/avatars/slack.svg') ?>" alt="">
                                         </div>
                                         <div class="ml-2">
                                             <div class="mb-n1"> Slack </div><small class="text-muted">Updated 25 minutes ago</small>
@@ -103,7 +104,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item unread">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/uifaces15.jpg" alt="">
+                                        <img src="<?php asset('images/avatars/uifaces15.jpg') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="text"> Jeffrey Wells created a schedule </p><span class="date">Just now</span>
@@ -112,7 +113,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item unread">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/uifaces16.jpg" alt="">
+                                        <img src="<?php asset('images/avatars/uifaces16.jpg') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="text"> Anna Vargas logged a chat </p><span class="date">3 hours ago</span>
@@ -121,7 +122,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/uifaces17.jpg" alt="">
+                                        <img src="<?php asset('images/avatars/uifaces17.jpg') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="text"> Sara Carr invited to Stilearn Admin </p><span class="date">5 hours ago</span>
@@ -130,7 +131,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/uifaces18.jpg" alt="">
+                                        <img src="<?php asset('images/avatars/uifaces18.jpg') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="text"> Arthur Carroll updated a project </p><span class="date">1 day ago</span>
@@ -139,7 +140,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/uifaces19.jpg" alt="">
+                                        <img src="<?php asset('images/avatars/uifaces19.jpg') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="text"> Hannah Romero created a task </p><span class="date">1 day ago</span>
@@ -148,7 +149,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/uifaces20.jpg" alt="">
+                                        <img src="<?php asset('images/avatars/uifaces20.jpg') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="text"> Angela Peterson assign a task to you </p><span class="date">2 days ago</span>
@@ -157,7 +158,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/uifaces21.jpg" alt="">
+                                        <img src="<?php asset('images/avatars/uifaces21.jpg') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="text"> Shirley Mason and 3 others followed you </p><span class="date">2 days ago</span>
@@ -179,7 +180,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item unread">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/team1.jpg" alt="">
+                                        <img src="<?php asset('images/avatars/team1.jpg') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="subject"> Stilearning </p>
@@ -189,7 +190,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/team3.png" alt="">
+                                        <img src="<?php asset('images/avatars/team3.png') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="subject"> Openlane </p>
@@ -215,7 +216,7 @@
                                 <!-- .dropdown-item -->
                                 <a href="#" class="dropdown-item">
                                     <div class="user-avatar">
-                                        <img src="assets/images/avatars/team2.png" alt="">
+                                        <img src="<?php asset('images/avatars/team2.png') ?>" alt="">
                                     </div>
                                     <div class="dropdown-item-body">
                                         <p class="subject"> Creative Division </p>
@@ -266,7 +267,7 @@
                 </ul><!-- /.nav -->
                 <!-- .btn-account -->
                 <div class="dropdown d-flex">
-                    <button class="btn-account d-none d-md-flex" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="user-avatar user-avatar-md"><img src="assets/images/avatars/profile.jpg" alt=""></span> <span class="account-summary pr-lg-4 d-none d-lg-block"><span class="account-name"><?php echo authUser()->name; ?></span> <span class="account-description"><?php echo authUser()->designation; ?></span></span></button> <!-- .dropdown-menu -->
+                    <button class="btn-account d-none d-md-flex" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="user-avatar user-avatar-md"><img src="<?php asset('images/avatars/profile.jpg') ?>" alt=""></span> <span class="account-summary pr-lg-4 d-none d-lg-block"><span class="account-name"><?php echo authUser()->name; ?></span> <span class="account-description"><?php echo authUser()->designation; ?></span></span></button> <!-- .dropdown-menu -->
                     <div class="dropdown-menu">
                         <div class="dropdown-arrow ml-3"></div>
                         <h6 class="dropdown-header d-none d-md-block d-lg-none"> Beni Arisandi </h6><a class="dropdown-item" href="user-profile.php"><span class="dropdown-icon oi oi-person"></span> Profile</a> <a class="dropdown-item account-logout" href="#"><span class="dropdown-icon oi oi-account-logout"></span> Logout</a>

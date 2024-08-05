@@ -1,5 +1,5 @@
 <?php
-require_once('app/init.php');
+require_once('../app/init.php');
 // use App\Models\User;
 // $user = new User($pdo);
 // dd(authUser());
@@ -11,34 +11,44 @@ function layoutTop($pageTitle = 'Page', $additionalCSS = [])
         <html lang='en'>
         <head>
             <title>$pageTitle | C&W Department, KP</title>";
-    require_once 'includes/head.php';
+    require_once '../includes/head.php';
     if (!empty($additionalCSS)) {
         foreach ($additionalCSS as $css) {
-            echo "<link rel='stylesheet' href='$css'>";
+            echo "<link rel='stylesheet' href='".asset($css, false)."'>";
         }
     }
     echo "</head>
         <body>
-        <!--[if lt IE 10]>
-        <div class='page-message' role='alert'>You are using an <strong>outdated</strong> browser. Please <a class='alert-link' href='http://browsehappy.com/'>upgrade your browser</a> to improve your experience and security.</div>
-        <![endif]-->
-            <div class='app'>
+            <div class='app'>";
+        require_once '../includes/topbar.php';
+        require_once '../includes/aside.php';
+        echo "<main class='app-main'>";
+                $messages = getFlash();
+                if ($messages): ?>
+                    <div class="col-lg-4" style="position: fixed; z-index: 9999; top: 3.7rem; left:0; right:0; margin: 0 auto">
+                        <?php foreach ($messages as $type => $message): ?>
+                            <div class="alert alert-<?php echo $type; ?> alert-dismissible fade show">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong><?php echo $type === 'success' ? 'Well done!' : 'Uh Oh!' ?></strong> 
+                                <?php echo $message; ?>.
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif;
+
+            echo "
             ";
-    require_once 'includes/topbar.php';
-    require_once 'includes/aside.php';
-    echo "<main class='app-main'>
-    ";
 }
 
 function layoutBottom($additionalJS = [])
 {
-    require_once 'includes/footer.php';
+    require_once '../includes/footer.php';
     echo "</main>
             </div>";
-    require_once 'includes/scripts.php';
+    require_once '../includes/scripts.php';
     if (!empty($additionalJS)) {
         foreach ($additionalJS as $script) {
-            echo "<script src='$script'></script>";
+            echo "<script src='".asset($script, false)."'></script>";
         }
     }
     echo "

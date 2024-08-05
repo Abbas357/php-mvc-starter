@@ -1,7 +1,7 @@
 <aside class="app-aside app-aside-expand-md app-aside-light">
     <div class="aside-content">
         <header class="aside-header d-block d-md-none">
-            <button class="btn-account" type="button" data-toggle="collapse" data-target="#dropdown-aside"><span class="user-avatar user-avatar-lg"><img src="assets/images/avatars/profile.jpg" alt=""></span> <span class="account-icon"><span class="fa fa-caret-down fa-lg"></span></span> <span class="account-summary"><span class="account-name">Beni Arisandi</span> <span class="account-description">Marketing Manager</span></span></button> <!-- /.btn-account -->
+            <button class="btn-account" type="button" data-toggle="collapse" data-target="#dropdown-aside"><span class="user-avatar user-avatar-lg"><img src="<?php asset('images/avatars/profile.jpg') ?>" alt=""></span> <span class="account-icon"><span class="fa fa-caret-down fa-lg"></span></span> <span class="account-summary"><span class="account-name">Beni Arisandi</span> <span class="account-description">Marketing Manager</span></span></button> <!-- /.btn-account -->
             <div id="dropdown-aside" class="dropdown-aside collapse">
                 <div class="pb-3">
                     <a class="dropdown-item" href="user-profile.php"><span class="dropdown-icon oi oi-person"></span> Profile</a> <a class="dropdown-item" href="auth-signin-v1.php"><span class="dropdown-icon oi oi-account-logout"></span> Logout</a>
@@ -12,18 +12,18 @@
         <div class="aside-menu overflow-hidden">
             <nav id="stacked-menu" class="stacked-menu">
                 <ul class="menu">
-                    <li class="menu-item has-active">
-                        <a href="index.php" class="menu-link"><span class="menu-icon fas fa-home"></span> <span class="menu-text">Dashboard</span></a>
+                    <li class="menu-item <?php echo hasActive(''); ?>">
+                        <a href="<?php route('') ?>" class="menu-link"><span class="menu-icon fas fa-home"></span> <span class="menu-text">Dashboard</span></a>
                     </li>
-                     
-                    <li class="menu-item has-child">
+                    
+                    <li class="menu-item has-child <?php echo hasActive('users/add-user') || hasActive('users/all-users') ? 'has-active' : ''; ?>">
                         <a href="#" class="menu-link"><span class="menu-icon oi oi-person"></span> <span class="menu-text">Users</span></a>
                         <ul class="menu">
-                            <li class="menu-item">
-                                <a href="add-user" class="menu-link">Add User</a>
+                            <li class="menu-item <?php echo hasActive('users/add-user'); ?>">
+                                <a href="<?php route('users/add-user') ?>" class="menu-link">Add User</a>
                             </li>
-                            <li class="menu-item">
-                                <a href="all-users" class="menu-link">All Users</a>
+                            <li class="menu-item <?php echo hasActive('users/all-users'); ?>">
+                                <a href="<?php route('users/all-users') ?>" class="menu-link">All Users</a>
                             </li>
                         </ul>
                     </li>

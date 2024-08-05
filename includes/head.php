@@ -15,15 +15,15 @@
         "@context": "https://cwd.gkp.pk"
     }
 </script>
-<link rel="apple-touch-icon" sizes="144x144" href="assets/apple-touch-icon.png">
-<link rel="shortcut icon" href="assets/favicon.ico">
+<link rel="apple-touch-icon" sizes="144x144" href="<?php asset('images/apple-touch-icon.png') ?>">
+<link rel="shortcut icon" href="<?php asset('favicon.ico') ?>">
 <meta name="theme-color" content="#3063A0">
 <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600" rel="stylesheet">
-<link rel="stylesheet" href="assets/vendor/open-iconic/css/open-iconic-bootstrap.min.css">
-<link rel="stylesheet" href="assets/vendor/fontawesome/css/all.css">
-<link rel="stylesheet" href="assets/css/theme.min.css" data-skin="default">
-<link rel="stylesheet" href="assets/css/theme-dark.min.css" data-skin="dark">
-<link rel="stylesheet" href="assets/css/custom.css">
+<link rel="stylesheet" href="<?php asset('vendor/open-iconic/css/open-iconic-bootstrap.min.css') ?>">
+<link rel="stylesheet" href="<?php asset('vendor/fontawesome/css/all.css') ?>">
+<link rel="stylesheet" href="<?php asset('css/theme.min.css"') ?>" data-skin="default">
+<link rel="stylesheet" href="<?php asset('css/theme-dark.min.css') ?>" data-skin="dark">
+<link rel="stylesheet" href="<?php asset('css/custom.css"') ?>">
 <script>
     var skin = localStorage.getItem('skin') || 'default';
     var isCompact = JSON.parse(localStorage.getItem('hasCompactMenu'));

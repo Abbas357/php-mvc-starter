@@ -1,0 +1,87 @@
+[
+  {
+    "key": "Peeta Mellark",
+    "value": "peetm",
+    "avatar": "public/images/avatars/uifaces1.jpg"
+  }, {
+    "key": "Cinna",
+    "value": "cinnastyles",
+    "avatar": "public/images/avatars/uifaces2.jpg"
+  }, {
+    "key": "Rue",
+    "value": "rue74",
+    "avatar": "public/images/avatars/uifaces3.jpg"
+  }, {
+    "key": "Foxface",
+    "value": "Foxyweapons",
+    "avatar": "public/images/avatars/uifaces4.jpg"
+  }, {
+    "key": "Cato",
+    "value": "catod2",
+    "avatar": "public/images/avatars/uifaces5.jpg"
+  }, {
+    "key": "Clove",
+    "value": "clove74",
+    "avatar": "public/images/avatars/uifaces6.jpg"
+  }, {
+    "key": "Thresh",
+    "value": "tmoney",
+    "avatar": "public/images/avatars/uifaces7.jpg"
+  }, {
+    "key": "Glimmer",
+    "value": "glimmerofhope",
+    "avatar": "public/images/avatars/uifaces8.jpg"
+  }, {
+    "key": "Marvel",
+    "value": "MarvelvsDC",
+    "avatar": "public/images/avatars/uifaces9.jpg"
+  }, {
+    "key": "Effie Trinket",
+    "value": "effetiquette",
+    "avatar": "public/images/avatars/uifaces10.jpg"
+  }, {
+    "key": "Haymitch Abernathy ",
+    "value": "heymentor",
+    "avatar": "public/images/avatars/uifaces11.jpg"
+  }, {
+    "key": "Gale Hawthorne",
+    "value": "ghaw",
+    "avatar": "public/images/avatars/uifaces12.jpg"
+  }, {
+    "key": "Primrose Everdeen",
+    "value": "primhealer",
+    "avatar": "public/images/avatars/uifaces13.jpg"
+  }, {
+    "key": "Madge Undersee",
+    "value": "madfire",
+    "avatar": "public/images/avatars/uifaces14.jpg"
+  }, {
+    "key": "President Snow",
+    "value": "panem_master",
+    "avatar": "public/images/avatars/uifaces15.jpg"
+  }, {
+    "key": "Finnick Odair",
+    "value": "odaircpr",
+    "avatar": "public/images/avatars/uifaces16.jpg"
+  }, {
+    "key": "Mags",
+    "value": "oldthunder",
+    "avatar": "public/images/avatars/uifaces17.jpg"
+  }, {
+    "key": "Johanna Mason",
+    "value": "jmtrator",
+    "avatar": "public/images/avatars/uifaces18.jpg"
+  }, {
+    "key": "Beetee Latier",
+    "value": "wire_guided",
+    "avatar": "public/images/avatars/uifaces19.jpg"
+  }, {
+    "key": "Wiress",
+    "value": "finisher",
+    "avatar": "public/images/avatars/uifaces20.jpg"
+  }, {
+    "key": "Enobaria",
+    "value": "blade_tooth",
+    "avatar": "public/images/avatars/uifaces1.jpg"
+  }
+]

@@ -4,10 +4,12 @@ function request()
 {
     return new \App\Support\Request;
 }
+
 function response()
 {
     return new \App\Support\Response;
 }
+
 function pdo()
 {
     static $pdo = null;
@@ -186,20 +188,6 @@ function timeAgo($datetime)
     return ' · ' . date('j M Y', $time);
 }
 
-function logo($width = 250, $height = 60, $alt = 'Logo')
-{
-    $path = 'assets/images/logo.png';
-    $basePath = rtrim(config('app.url'), '/') . '/';
-    $fullPath = $basePath . ltrim($path, '/');
-    return sprintf(
-        '<img src="%s" style="width:%dpx; height:%dpx" alt="%s" />',
-        htmlspecialchars($fullPath, ENT_QUOTES, 'UTF-8'),
-        (int)$width,
-        (int)$height,
-        htmlspecialchars($alt, ENT_QUOTES, 'UTF-8')
-    );
-}
-
 function redirectIfDirectAccess()
 {
     if ($_SERVER['REQUEST_METHOD'] === "GET" && realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME'])) {
@@ -208,7 +196,8 @@ function redirectIfDirectAccess()
     }
 }
 
-function config($key, $default = null) {
+function config($key, $default = null)
+{
     static $config;
     if (!$config) {
         $config = require __DIR__ . '/config.php';
@@ -227,17 +216,102 @@ function config($key, $default = null) {
     return $value;
 }
 
-function asset($type, $file)
+function asset($file, $echo = true)
 {
-    $baseUrl = config('app.url');
+    $url = config('app.url') . $file;
+    if ($echo) {
+        echo $url;
+        return;
+    }
+    return $url;
+}
 
-    $validTypes = ['js', 'css', 'vendor'];
+function route($dir, $echo = true)
+{
+    $url = config('app.url') . $dir;
+    if ($echo) {
+        echo $url;
+        return;
+    }
+    return $url;
+}
 
-    if (!in_array($type, $validTypes)) {
-        throw new InvalidArgumentException("Invalid asset type provided.");
+function routeTo($name)
+{
+    echo config('app.url') . \App\Support\Router::route($name);
+}
+
+function setFlash($key, $message)
+{
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+    $_SESSION['flash_messages'][$key] = $message;
+}
+
+function getFlash()
+{
+    if (!isset($_SESSION)) {
+        session_start();
     }
 
-    return $baseUrl . '/assets/' . $type . '/' . $file;
+    $messages = $_SESSION['flash_messages'] ?? [];
+    unset($_SESSION['flash_messages']);
+
+    return $messages;
+}
+
+function redirectToRoute($name, $parameters = [])
+    {
+        $route = \App\Support\Router::getUriForNamedRoute($name);
+        if (!$route) {
+            throw new \Exception("No route found with the name: $name");
+        }
+        $uri = $route['uri'];
+        foreach ($parameters as $key => $value) {
+            $uri = str_replace("{{$key}}", $value, $uri);
+        }
+        header("Location:" . config('app.url').trim($uri, '/'));
+        exit;
+    }
+
+function method($httpMethod)
+{
+    $validMethods = ['PUT', 'PATCH', 'DELETE'];
+
+    if (in_array(strtoupper($httpMethod), $validMethods)) {
+        echo '<input type="hidden" name="_method" value="' . htmlspecialchars(strtoupper($httpMethod), ENT_QUOTES, 'UTF-8') . '">';
+    }
+
+    echo '';
+}
+
+function request_url()
+{
+    if ($_SERVER['HTTP_HOST'] == 'localhost') {
+        $array_uri = explode('/', $_SERVER['REQUEST_URI']);
+        return implode('/', array_slice($array_uri, 2));
+    } else {
+        return implode('/', array_slice(explode('/', $_SERVER['REQUEST_URI']), 1));
+    }
+}
+
+function view($viewName, $data = [])
+{
+    extract($data);
+    $viewPath = "../views/{$viewName}.php";
+    if (file_exists($viewPath)) {
+        require $viewPath;
+    } else {
+        http_response_code(404);
+        require "../views/404.php";
+    }
+}
+
+function hasActive($route, $output = 'has-active')
+{
+    $currentRoute = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/', strpos($_SERVER['REQUEST_URI'], '/') + 1) + 1);
+    return $currentRoute === trim($route, '/') ? $output : '';
 }
 
 function env($key, $default = null)

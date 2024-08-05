@@ -1,11 +1,23 @@
 <?php
+
 namespace App\Models;
-use PDO;
+
 use App\Support\Storage;
+use App\Support\Auth;
+
 class User extends Model
 {
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(pdo());
+    }
+
+    public function addUserForm()
+    {
+        $data = [
+            'title' => 'MUHAMMAD ABBAS KHAN',
+        ];
+        return view('users/add-user', $data);
     }
 
     public function search($search)
@@ -24,40 +36,78 @@ class User extends Model
         return $this->checkExistence('email', $email);
     }
 
-    public function createUser($request)
+    public function index() {
+        return view('index');
+    }
+
+    public function loginView() {
+        return view('login');
+    }
+
+    public function login() {
+        $email = request()->input('email');
+        $password = request()->input('password');
+        
+        if (!empty($email) or !empty($password)) {
+            $email = checkInput($email);
+            $password = checkInput($password);
+            
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                setFlash('danger', 'Invalid email format');
+                redirectToRoute('login.view');
+            } else {
+                if (Auth::attempt($email, $password) === false) {
+                    setFlash('danger', 'The email or password is incorrect');
+                    redirectToRoute('login.view');
+                } else {
+                    redirectToRoute('dashboard');
+                }
+            }
+        } else {
+            redirectToRoute('login.view');
+            setFlash('danger', 'Please enter username and password!');
+        }
+    }
+
+    public function createUser()
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $email = request()->input('email');
+        $password = request()->input('password');
 
         if (empty($email) || empty($password)) {
-            return ['success' => false, 'message' => 'Email and password are required fields.'];
+            setFlash('danger', 'Email and password are required fields.');
+            header('Location: ' . route('users/add-user'));
+            exit;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return ['success' => false, 'message' => 'Invalid email format.'];
+            setFlash('danger', 'Invalid email format.');
+            header('Location: ' . route('users/add-user'));
+            exit;
         }
 
         $data = [
-            'name' => $request->input('name'),
+            'name' => request()->input('name'),
             'email' => $email,
-            'password' => $password,
-            'mobile_number' => $request->input('mobile_number'),
-            'office' => $request->input('office'),
-            'designation' => $request->input('designation'),
+            'password' => password_hash($password, PASSWORD_BCRYPT),
+            'mobile_number' => request()->input('mobile_number'),
+            'office' => request()->input('office'),
+            'designation' => request()->input('designation'),
         ];
 
-        $file = $request->hasFile('profile_pic') ? $request->file('profile_pic') : null;
+        $file = request()->hasFile('profile_pic') ? request()->file('profile_pic') : null;
         $data['profile_pic'] = $this->handleFileUpload($file);
-
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
         $insertedId = $this->create($data);
         if ($insertedId) {
-            return ['success' => true, 'message' => "User created successfully with ID: " . $insertedId];
+            setFlash('success', 'User created successfully with ID: ' . $insertedId);
         } else {
-            return ['success' => false, 'message' => 'There was an error creating the user.'];
+            setFlash('danger', 'There was an error creating the user.');
         }
+
+        redirectToRoute('add.user.view');
     }
+
 
     private function handleFileUpload($file)
     {
@@ -70,5 +120,9 @@ class User extends Model
             }
         }
         return null;
+    }
+
+    public function allUsers() {
+        return view('users/all-users');
     }
 }
