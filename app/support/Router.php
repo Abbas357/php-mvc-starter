@@ -73,15 +73,21 @@ class Router
         $uri = trim($requestUri, '/');
         $method = strtoupper($requestMethod);
 
-        if (isset(self::$routes[$method][$uri])) {
-            return self::callModelMethod(self::$routes[$method][$uri]);
+        foreach (self::$routes[$method] as $routeUri => $modelMethod) {
+            $routePattern = preg_replace('/\{[^\}]+\}/', '([^/]+)', $routeUri);
+            $routePattern = "@^" . trim($routePattern, '/') . "$@";
+
+            if (preg_match($routePattern, $uri, $matches)) {
+                array_shift($matches); // Remove the full match
+                return self::callModelMethod($modelMethod, $matches);
+            }
         }
 
         http_response_code(404);
-        require "../views/404.php";
+        require "../views/errors/404.php";
     }
 
-    protected static function callModelMethod($modelMethod)
+    protected static function callModelMethod($modelMethod, $params = [])
     {
         list($modelClass, $method) = explode('@', $modelMethod);
 
@@ -96,7 +102,7 @@ class Router
             throw new \Exception("Method $method not found in model $modelClass");
         }
         
-        return $modelInstance->$method();
+        return call_user_func_array([$modelInstance, $method], $params);
     }
 
     public static function getUriForNamedRoute($name)

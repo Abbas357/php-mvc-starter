@@ -2,9 +2,9 @@
 
 error_reporting(E_ALL & ~E_DEPRECATED);
 
-$dsn = 'mysql:host=' . env('DB_HOST', 'localhost') . ';dbname=' . env('DB_NAME', 'cwdgkp_new');
-$username = env('DB_USER', 'root');
-$password = env('DB_PASSWORD', '');
+$dsn = 'mysql:host=' . config('DB_HOST', 'localhost') . ';dbname=' . config('DB_NAME', 'cwdgkp_new');
+$username = config('DB_USER', 'root');
+$password = config('DB_PASSWORD', '');
 
 $options = array(
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

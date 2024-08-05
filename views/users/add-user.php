@@ -38,22 +38,22 @@ layoutTop('Basic Form');
               <div class="form-row">
                 <div class="col-md-6 mb-3">
                   <label for="validationTooltip01">Name<abbr title="Required">*</abbr></label>
-                  <input type="text" class="form-control" id="validationTooltip01" placeholder="Name" name="name" required="">
+                  <input type="text" class="form-control" id="validationTooltip01" value="<?= old('name') ?>" placeholder="Name" name="name" required="">
                   <div class="invalid-feedback"> Name is required </div>
                 </div>
                 <div class="col-md-6 mb-3">
                 <label for="validationTooltipEmail">Email <abbr title="Required">*</abbr></label>
-                <input type="email" class="form-control" id="validationTooltipEmail" name="email" placeholder="Email" aria-describedby="inputGroupPrepend" required="">
+                <input type="email" class="form-control" id="validationTooltipEmail" value="<?= old('email') ?>" name="email" placeholder="Email" aria-describedby="inputGroupPrepend" required="">
                 <div id="inputGroupPrepend" class="invalid-tooltip">Please enter valid email</div>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label class="d-flex justify-content-between" for="lbl5"><span>Password</span> <a href="#lbl5" data-toggle="password"><i class="fa fa-eye fa-fw"></i> <span>Show</span></a></label> 
-                  <input type="password" class="form-control" name="password" id="lbl5" required>
+                  <input type="password" class="form-control" name="password" value="<?= old('password') ?>" id="lbl5" required>
                   <div class="invalid-feedback"> Password is required </div>
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="validationTooltipMobileNumber">Mobile Number</label>
-                  <input type="text" class="form-control" id="validationTooltipMobileNumber" name="mobile_number" required placeholder="Mobile Number" aria-describedby="inputGroupPrepend">
+                  <input type="text" class="form-control" id="validationTooltipMobileNumber" value="<?= old('mobile_number') ?>" name="mobile_number" required placeholder="Mobile Number" aria-describedby="inputGroupPrepend">
                   <div id="inputGroupPrepend" class="invalid-tooltip"> Please enter Mobile Number</div>
                   <div id="inputGroupPrepend" class="valid-tooltip"> Looks Good</div>
                 </div>
@@ -62,11 +62,11 @@ layoutTop('Basic Form');
                 <div class="col-md-4 mb-3">
                   <label for="validationTooltipCountry">Office <abbr title="Required">*</abbr></label>
                   <select class="custom-select d-block w-100" id="validationTooltipCountry" name="office" required="">
-                    <option value=""> Choose... </option>
-                    <option> IT </option>
-                    <option> Technical </option>
-                    <option> Chief Engineer CDO </option>
-                    <option> Chief Engineer Center </option>
+                      <option value=""> Choose... </option>
+                      <option value="IT" <?= old('office') == 'IT' ? 'selected' : '' ?>> IT </option>
+                      <option value="Technical" <?= old('office') == 'Technical' ? 'selected' : '' ?>> Technical </option>
+                      <option value="Chief Engineer CDO" <?= old('office') == 'Chief Engineer CDO' ? 'selected' : '' ?>> Chief Engineer CDO </option>
+                      <option value="Chief Engineer Center" <?= old('office') == 'Chief Engineer Center' ? 'selected' : '' ?>> Chief Engineer Center </option>
                   </select>
                   <div class="invalid-feedback"> Please select an Office </div>
                 </div>
@@ -74,17 +74,17 @@ layoutTop('Basic Form');
                   <label for="validationTooltipState">Designation <abbr title="Required">*</abbr></label>
                   <select class="custom-select d-block w-100" id="validationTooltipState" name="designation" required="">
                     <option value=""> Choose... </option>
-                    <option value="Director IT"> Director IT </option>
-                    <option value="Deputy Director IT"> Deputy Director IT </option>
-                    <option value="Assistant Director IT"> Assistant Director IT </option>
-                    <option value="Assistant Director GIS"> Assistant Director GIS </option>
-                    <option value="Computer Operator"> Computer Operator </option>
-                    <option value="Assistant"> Assistant </option>
-                    <option value="Junior Clerk"> Junior Clerk </option>
-                    <option value="Senior Clerk"> Senior Clerk </option>
-                    <option value="Superintendent"> Superintendent </option>
-                    <option value="Section Officer"> Section Officer </option>
-                  </select>
+                    <option value="Director IT" <?= old('designation') == 'Director IT' ? 'selected' : '' ?>> Director IT </option>
+                    <option value="Deputy Director IT" <?= old('designation') == 'Deputy Director IT' ? 'selected' : '' ?>> Deputy Director IT </option>
+                    <option value="Assistant Director IT" <?= old('designation') == 'Assistant Director IT' ? 'selected' : '' ?>> Assistant Director IT </option>
+                    <option value="Assistant Director GIS" <?= old('designation') == 'Assistant Director GIS' ? 'selected' : '' ?>> Assistant Director GIS </option>
+                    <option value="Computer Operator" <?= old('designation') == 'Computer Operator' ? 'selected' : '' ?>> Computer Operator </option>
+                    <option value="Assistant" <?= old('designation') == 'Assistant' ? 'selected' : '' ?>> Assistant </option>
+                    <option value="Junior Clerk" <?= old('designation') == 'Junior Clerk' ? 'selected' : '' ?>> Junior Clerk </option>
+                    <option value="Senior Clerk" <?= old('designation') == 'Senior Clerk' ? 'selected' : '' ?>> Senior Clerk </option>
+                    <option value="Superintendent" <?= old('designation') == 'Superintendent' ? 'selected' : '' ?>> Superintendent </option>
+                    <option value="Section Officer" <?= old('designation') == 'Section Officer' ? 'selected' : '' ?>> Section Officer </option>
+                </select>
                   <div class="invalid-feedback"> Please provide a designation </div>
                 </div>
                 <div class="col-md-4 mb-3">

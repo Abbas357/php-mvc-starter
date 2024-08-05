@@ -14,7 +14,6 @@ class News extends Model
 		return $stmt->fetchAll(PDO::FETCH_OBJ);
 	}
 
-
 	function getPostLinks($post){
 		$post = preg_replace("/(https?:\/\/)([\w]+.)([\w\.]+)/", "<a href='$0' target='_blank'>$0</a>", $post);
 		$post = preg_replace("/#([\w]+)/", "<a href='".config('app.url')."hashtag/$1' target='_blank'>$0</a>", $post);

@@ -1,9 +1,14 @@
 <?php
 
-function request()
+function request($key = null)
 {
-    return new \App\Support\Request;
+    $request = new \App\Support\Request;
+    if ($key) {
+        return $request->input($key);
+    }
+    return $request;
 }
+
 
 function response()
 {
@@ -119,16 +124,6 @@ function checkInput($var)
     return $var;
 }
 
-function preventAccess($request, $currentFile, $currently)
-{
-    if (headers_sent()) {
-        return;
-    }
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && $currentFile === $currently) {
-        redirectTo('index');
-    }
-}
-
 function redirectTo($path)
 {
     $url = rtrim(config('app.url'), '/') . '/' . ltrim($path, '/');
@@ -188,14 +183,6 @@ function timeAgo($datetime)
     return ' · ' . date('j M Y', $time);
 }
 
-function redirectIfDirectAccess()
-{
-    if ($_SERVER['REQUEST_METHOD'] === "GET" && realpath(__FILE__) === realpath($_SERVER['SCRIPT_FILENAME'])) {
-        redirectTo('index');
-        exit;
-    }
-}
-
 function config($key, $default = null)
 {
     static $config;
@@ -236,9 +223,10 @@ function route($dir, $echo = true)
     return $url;
 }
 
-function routeTo($name)
+function routeTo($name, $params = [])
 {
-    echo config('app.url') . \App\Support\Router::route($name);
+    $routeUrl = \App\Support\Router::route($name, $params);
+    echo config('app.url') . $routeUrl;
 }
 
 function setFlash($key, $message)
@@ -254,26 +242,75 @@ function getFlash()
     if (!isset($_SESSION)) {
         session_start();
     }
-
     $messages = $_SESSION['flash_messages'] ?? [];
     unset($_SESSION['flash_messages']);
 
     return $messages;
 }
 
-function redirectToRoute($name, $parameters = [])
-    {
-        $route = \App\Support\Router::getUriForNamedRoute($name);
-        if (!$route) {
-            throw new \Exception("No route found with the name: $name");
-        }
-        $uri = $route['uri'];
-        foreach ($parameters as $key => $value) {
-            $uri = str_replace("{{$key}}", $value, $uri);
-        }
-        header("Location:" . config('app.url').trim($uri, '/'));
-        exit;
+function old($key, $default = '') {
+    if (isset($_SESSION['old_input'][$key])) {
+        return $_SESSION['old_input'][$key];
     }
+    return $default;
+}
+
+function abort($code) {
+    $viewsPath = $viewsPath = '../views/errors/';
+    http_response_code($code);
+    switch ($code) {
+        case 401:
+            $viewFile = $viewsPath . '401.php';
+            break;
+        case 403:
+            $viewFile = $viewsPath . '403.php';
+            break;
+        case 404:
+            $viewFile = $viewsPath . '404.php';
+            break;
+        default:
+            $viewFile = $viewsPath . 'default.php';
+            break;
+    }
+    if (file_exists($viewFile)) {
+        include $viewFile;
+    } else {
+        echo "<h1>Error $code</h1>";
+        echo "<p>An error occurred.</p>";
+    }
+    exit;
+}
+
+function redirectToRoute($name, $parameters = [])
+{
+    $route = \App\Support\Router::getUriForNamedRoute($name);
+    if (!$route) {
+        throw new \Exception("No route found with the name: $name");
+    }
+    $uri = $route['uri'];
+    foreach ($parameters as $key => $value) {
+        $uri = str_replace("{{$key}}", $value, $uri);
+    }
+    header("Location:" . config('app.url') . trim($uri, '/'));
+    exit;
+}
+
+// function redirectToRoute($name, $params = [])
+// {
+//     try {
+//         $uri = \App\Support\Router::getUriForNamedRoute($name);
+//         if ($uri === null) {
+//             throw new \Exception("Route [$name] not defined.");
+//         }
+//         foreach ($params as $key => $value) {
+//             $uri = str_replace("{{$key}}", $value, $uri);
+//         }
+//         header("Location:" . config('app.url') . trim($uri, '/'));
+//         exit;
+//     } catch (\Exception $e) {
+//         die($e->getMessage());
+//     }
+// }
 
 function method($httpMethod)
 {
@@ -304,7 +341,7 @@ function view($viewName, $data = [])
         require $viewPath;
     } else {
         http_response_code(404);
-        require "../views/404.php";
+        require "../views/errors/404.php";
     }
 }
 

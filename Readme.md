@@ -1,34 +1,38 @@
-1. New Tables
+# Important 
+
+## New Tables
     A. users
     B. roles
     C. permissions
     D. user_roles
     E. role_permissions
 
-Implement Roles and permissions
+## Implement Roles and permissions
 
-        $value = password_hash('password', PASSWORD_DEFAULT);
+    ```bash
+    $value = password_hash('password', PASSWORD_BCRYPT);
+    ```
 
-    Step #1:  Assign Roles to Users
-
+### Step #1:  Assign Roles to Users
+    ```python
         $userId = 1; // Example user ID
         $roleId = 2; // Example role ID
 
         $sql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$userId, $roleId]);
-
-    Step #2: Assign Permissions to Roles
-
+    ```
+### Step #2: Assign Permissions to Roles
+    ```python
         $roleId = 2; // Example role ID
         $permissionId = 3; // Example permission ID
 
         $sql = "INSERT INTO role_permissions (role_id, permission_id) VALUES (?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$roleId, $permissionId]);
-
-    Step #3: Check User Permissions
-
+    ```
+### Step #3: Check User Permissions
+    ```python
         $userId = 1; // Example user ID
         $requiredPermission = 'edit_posts'; // Example permission
 
@@ -54,3 +58,7 @@ Implement Roles and permissions
         } else {
             echo "User does not have the required permission.";
         }
+    ```
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

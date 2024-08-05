@@ -1,9 +1,0 @@
-RewriteEngine On
-
-# Allow access to files with certain extensions (if necessary)
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-
-# Block direct access to PHP files
-RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?yourdomain\.com [NC]
-RewriteRule \.php$ - [F,L]

@@ -21,6 +21,7 @@ abstract class Model
         $this->pdo = pdo();
         $this->setTableName();
         $this->resetQuery();
+        
     }
 
     private function setTableName()

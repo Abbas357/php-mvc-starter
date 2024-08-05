@@ -20,22 +20,6 @@ class User extends Model
         return view('users/add-user', $data);
     }
 
-    public function search($search)
-    {
-        $sql = "SELECT * FROM `users` WHERE (`name` LIKE :search OR `email` LIKE :search OR `designation` LIKE :search OR `office` LIKE :search) AND `status` = 1";
-        return $this->executeQuery($sql, [':search' => $search . '%']);
-    }
-
-    public function checkUsername($username)
-    {
-        return $this->checkExistence('username', $username);
-    }
-
-    public function checkEmail($email)
-    {
-        return $this->checkExistence('email', $email);
-    }
-
     public function index() {
         return view('index');
     }
@@ -45,9 +29,8 @@ class User extends Model
     }
 
     public function login() {
-        $email = request()->input('email');
-        $password = request()->input('password');
-        
+        $email = request('email');
+        $password = request('password');
         if (!empty($email) or !empty($password)) {
             $email = checkInput($email);
             $password = checkInput($password);
@@ -64,35 +47,35 @@ class User extends Model
                 }
             }
         } else {
-            redirectToRoute('login.view');
             setFlash('danger', 'Please enter username and password!');
+            redirectToRoute('login.view');
         }
     }
 
     public function createUser()
     {
-        $email = request()->input('email');
-        $password = request()->input('password');
-
+        $_SESSION['old_input'] = request()->all();
+        $email = request('email');
+        $password = request('password');
         if (empty($email) || empty($password)) {
             setFlash('danger', 'Email and password are required fields.');
-            header('Location: ' . route('users/add-user'));
+            redirectToRoute('add.user.view');
             exit;
         }
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             setFlash('danger', 'Invalid email format.');
-            header('Location: ' . route('users/add-user'));
+            redirectToRoute('add.user.view');
             exit;
         }
 
         $data = [
-            'name' => request()->input('name'),
+            'name' => request('name'),
             'email' => $email,
             'password' => password_hash($password, PASSWORD_BCRYPT),
-            'mobile_number' => request()->input('mobile_number'),
-            'office' => request()->input('office'),
-            'designation' => request()->input('designation'),
+            'mobile_number' => request('mobile_number'),
+            'office' => request('office'),
+            'designation' => request('designation'),
         ];
 
         $file = request()->hasFile('profile_pic') ? request()->file('profile_pic') : null;
@@ -100,12 +83,31 @@ class User extends Model
 
         $insertedId = $this->create($data);
         if ($insertedId) {
+            unset($_SESSION['old_input']);
             setFlash('success', 'User created successfully with ID: ' . $insertedId);
         } else {
             setFlash('danger', 'There was an error creating the user.');
         }
-
         redirectToRoute('add.user.view');
+    }
+
+    public function editUser($id) {
+        $data = [
+            'id' => $id,
+        ];
+        return view('test', $data);
+    }
+
+    public function getUser($id) {
+        if(!authenticated()) abort(401);
+        $data = [
+            'id' => $id,
+        ];
+        return view('test', $data);
+    }
+
+    public function deleteUser($id) {
+        $this->delete($id);
     }
 
 
@@ -124,5 +126,28 @@ class User extends Model
 
     public function allUsers() {
         return view('users/all-users');
+    }
+
+    public function logout() {
+        Auth::logout();
+        header('Content-Type: application/json');
+        setFlash('danger', 'You have been logged out.');
+        redirectTo('login');
+    }
+
+    public function search($search)
+    {
+        $sql = "SELECT * FROM `users` WHERE (`name` LIKE :search OR `email` LIKE :search OR `designation` LIKE :search OR `office` LIKE :search) AND `status` = 1";
+        return $this->executeQuery($sql, [':search' => $search . '%']);
+    }
+
+    public function checkUsername($username)
+    {
+        return $this->checkExistence('username', $username);
+    }
+
+    public function checkEmail($email)
+    {
+        return $this->checkExistence('email', $email);
     }
 }

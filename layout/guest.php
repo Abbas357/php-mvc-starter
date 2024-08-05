@@ -17,7 +17,7 @@ function layoutTop($pageTitle = 'Page', $additionalCSS = [])
             <body>";
             $messages = getFlash();
             if ($messages): ?>
-                <div class="col-lg-4" style="position: fixed; z-index: 9999; top: 3.7rem; left:0; right:0; margin: 0 auto">
+                <div class="col-lg-3" style="position: fixed; z-index: 9999; top: 3.7rem; left:0; right:0; margin: 0 auto">
                     <?php foreach ($messages as $type => $message): ?>
                         <div class="alert alert-<?php echo $type; ?> alert-dismissible fade show">
                             <button type="button" class="close" data-dismiss="alert">×</button>

@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title> Error 404: Page not found | C&W Department, KP </title>
+    <title> Page not found | C&W Department, KP </title>
     <?php require_once '../includes/head.php'; ?>
   </head>
   <body>
-    <!--[if lt IE 10]>
-    <div class="page-message" role="alert">You are using an <strong>outdated</strong> browser. Please <a class="alert-link" href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</div>
-    <![endif]-->
-    <!-- .empty-state -->
     <main id="notfound-state" class="empty-state empty-state-fullpage bg-black">
-      <!-- .empty-state-container -->
+      
       <div class="empty-state-container">
         <div class="card">
           <div class="card-header bg-light text-left">
@@ -23,22 +19,22 @@
             <h3> Page not found! </h3>
             <p class="state-description lead"> Sorry, we've misplaced that URL or it's pointing to something that doesn't exist. </p>
             <div class="state-action">
-              <a href="auth-error-v1.html" class="btn btn-lg btn-light"><i class="fa fa-angle-right"></i> Go Home</a>
+              <a href="<?php routeTo('dashboard') ?>" class="btn btn-lg btn-light"><i class="fa fa-angle-right"></i> Go Home</a>
             </div>
           </div>
         </div>
-      </div><!-- /.empty-state-container -->
-    </main><!-- /.empty-state -->
-    <script src="public/vendor/jquery/jquery.min.js"></script>
-    <script src="public/vendor/bootstrap/js/popper.min.js"></script>
-    <script src="public/vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="public/vendor/particles.js/particles.min.js"></script>
+      </div>
+    </main>
+    <script src="<?php asset('vendor/jquery/jquery.min.js') ?>"></script>
+    <script src="<?php asset('vendor/bootstrap/js/popper.min.js') ?>"></script>
+    <script src="<?php asset('vendor/bootstrap/js/bootstrap.min.js') ?>"></script>
+    <script src="<?php asset('vendor/particles.js/particles.min.js') ?>"></script>
     <script>
       $(document).on('theme:init', () =>
       {
-        particlesJS.load('notfound-state', 'public/js/pages/particles-error.json');
+        particlesJS.load('notfound-state', "<?php asset('js/pages/particles-error.json', true) ?>");
       })
     </script>
-    <script src="public/js/theme.min.js"></script>
+    <script src="<?php asset('js/theme.min.js') ?>"></script>
   </body>
 </html>

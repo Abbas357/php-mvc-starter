@@ -12,4 +12,4 @@ if (!isset($_SESSION)) {
     session_start();
 }
 
-// dd(config('app.dir'));
+// unset($_SESSION['old_input']);
