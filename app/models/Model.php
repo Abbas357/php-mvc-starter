@@ -3,25 +3,26 @@
 namespace App\Models;
 
 use PDO;
+use Exception;
 use PDOException;
 use ReflectionClass;
 
 abstract class Model
 {
+    protected $id;
     protected $pdo;
     protected $table;
     protected $query;
-    protected $params;
+    protected $params = [];
     protected $limit;
     protected $offset;
     protected $orderBy;
 
-    public function __construct()
+    public function __construct($id = null)
     {
+        $this->id = $id;
         $this->pdo = pdo();
         $this->setTableName();
-        $this->resetQuery();
-        
     }
 
     private function setTableName()
@@ -34,17 +35,29 @@ abstract class Model
         return $this->table;
     }
 
-    public function all()
+    public static function all()
     {
-        $this->query = "SELECT * FROM {$this->table}";
-        return $this->executeQuery();
+        $instance = new static;
+        $query = "SELECT * FROM {$instance->table}";
+        return self::executeQuery($query);
     }
 
-    public function find($id)
+    public static function find($id)
     {
-        $this->query = "SELECT * FROM {$this->table} WHERE id = :id";
-        $this->params = ['id' => $id];
-        return $this->executeQuery(PDO::FETCH_ASSOC);
+        $instance = new static;
+        $query = "SELECT * FROM {$instance->table} WHERE id = :id LIMIT 1";
+        $params = ['id' => $id];
+        $result = self::executeQuery($query, $params, PDO::FETCH_ASSOC);
+
+        if (empty($result)) {
+            return null;
+        }
+
+        foreach ($result[0] as $key => $value) {
+            $instance->{$key} = $value;
+        }
+
+        return $instance;
     }
 
     public function create(array $fields)
@@ -53,7 +66,7 @@ abstract class Model
         $placeholders = ':' . implode(', :', array_keys($fields));
         $this->query = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
         $this->params = $fields;
-        
+
         try {
             $stmt = $this->pdo->prepare($this->query);
             foreach ($this->params as $key => $value) {
@@ -67,8 +80,12 @@ abstract class Model
         }
     }
 
-    public function update($id, array $fields)
+    public function update(array $fields)
     {
+        if (!$this->id) {
+            throw new Exception("ID is required for update operation.");
+        }
+
         $setClause = '';
         $i = 1;
         foreach ($fields as $name => $value) {
@@ -78,12 +95,15 @@ abstract class Model
             }
             $i++;
         }
+
         $this->query = "UPDATE {$this->table} SET {$setClause} WHERE id = :id";
+
         $this->params = $fields;
-        $this->params['id'] = $id;
-        
+        $this->params['id'] = $this->id;
+
         try {
             $stmt = $this->pdo->prepare($this->query);
+
             foreach ($this->params as $key => $value) {
                 $stmt->bindValue(":{$key}", $value);
             }
@@ -92,29 +112,69 @@ abstract class Model
             error_log($e->getMessage());
             return false;
         }
-    }
 
-    public function delete($id)
-    {
-        $this->query = "DELETE FROM {$this->table} WHERE id = :id";
-        $this->params = ['id' => $id];
-        
-        try {
-            $stmt = $this->pdo->prepare($this->query);
-            $stmt->bindValue(':id', $id);
-            $stmt->execute();
-        } catch (PDOException $e) {
-            error_log($e->getMessage());
-            return false;
-        }
         return true;
     }
 
-    public function where($field, $operator = '=', $value = null)
+    // public function delete()
+    // {
+    //     if (!$this->id) {
+    //         throw new Exception("ID is required for delete operation.");
+    //     }
+
+    //     $this->query = "DELETE FROM {$this->table} WHERE id = :id";
+    //     try {
+    //         $stmt = $this->pdo->prepare($this->query);
+    //         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+    //         $stmt->execute();
+    //     } catch (PDOException $e) {
+    //         error_log($e->getMessage());
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
+    public function delete()
     {
-        $this->query .= " WHERE {$field} {$operator} :value";
-        $this->params['value'] = $value;
-        return $this;
+        if ($this->id) {
+            // Delete a specific record
+            $this->query = "DELETE FROM {$this->table} WHERE id = :id";
+            try {
+                $stmt = $this->pdo->prepare($this->query);
+                $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+                $stmt->execute();
+            } catch (PDOException $e) {
+                error_log($e->getMessage());
+                return false;
+            }
+            return true;
+        } else {
+            // Check if this is a query builder instance
+            if ($this->query) {
+                try {
+                    $stmt = $this->pdo->prepare($this->query->getQuery());
+                    foreach ($this->query->getParams() as $key => $value) {
+                        $stmt->bindValue($key, $value);
+                    }
+                    $stmt->execute();
+                } catch (PDOException $e) {
+                    error_log($e->getMessage());
+                    return false;
+                }
+                return true;
+            } else {
+                throw new Exception("No valid ID or query builder instance provided for delete operation.");
+            }
+        }
+    }
+
+
+    public static function where($field, $operator = '=', $value = null)
+    {
+        $instance = new static();
+        $instance->query = "SELECT * FROM {$instance->table} WHERE {$field} {$operator} :value";
+        $instance->params['value'] = $value;
+        return $instance;
     }
 
     public function orWhere($field, $operator = '=', $value = null)
@@ -137,15 +197,13 @@ abstract class Model
 
     public function limit($limit)
     {
-        $this->query .= " LIMIT :limit";
-        $this->params['limit'] = $limit;
+        $this->limit = $limit;
         return $this;
     }
 
     public function offset($offset)
     {
-        $this->query .= " OFFSET :offset";
-        $this->params['offset'] = $offset;
+        $this->offset = $offset;
         return $this;
     }
 
@@ -162,24 +220,46 @@ abstract class Model
     public function pluck($field)
     {
         $this->query = "SELECT {$field} FROM {$this->table}";
-        return $this->executeQuery(PDO::FETCH_COLUMN);
+        return $this->get(PDO::FETCH_COLUMN);
     }
 
     public function first()
     {
-        $this->query .= " LIMIT 1";
-        return $this->executeQuery(PDO::FETCH_ASSOC);
+        $this->limit = 1;
+        $results = $this->get(PDO::FETCH_ASSOC);
+        return $results ? $results[0] : null;
     }
 
-    public function staticQuery($query, $params = [], $fetchMode = PDO::FETCH_OBJ)
+    public function last()
     {
-        $stmt = $this->pdo->prepare($query);
-        foreach ($params as $param => $value) {
-            $stmt->bindValue(":{$param}", $value);
+        $this->query .= " ORDER BY id DESC";
+        return $this->first();
+    }
+
+    public function get($fetchMode = PDO::FETCH_OBJ)
+    {
+        $sql = $this->query;
+
+        if ($this->limit) {
+            $sql .= " LIMIT :limit";
+            $this->params['limit'] = $this->limit;
         }
+
+        if ($this->offset) {
+            $sql .= " OFFSET :offset";
+            $this->params['offset'] = $this->offset;
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($this->params as $param => $value) {
+            $stmt->bindValue(":{$param}", $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+
         $stmt->execute();
+        $this->resetQuery();
         return $stmt->fetchAll($fetchMode);
     }
+
 
     public static function count()
     {
@@ -216,15 +296,30 @@ abstract class Model
         return $model->staticQuery($query, [], PDO::FETCH_COLUMN)[0];
     }
 
-    protected function executeQuery($fetchMode = PDO::FETCH_OBJ)
+    protected function staticQuery($query, $params = [], $fetchMode = PDO::FETCH_OBJ)
     {
-        $stmt = $this->pdo->prepare($this->query);
-        foreach ($this->params as $param => $value) {
+        $stmt = $this->pdo->prepare($query);
+        foreach ($params as $param => $value) {
             $stmt->bindValue(":{$param}", $value);
         }
         $stmt->execute();
-        $this->resetQuery();
         return $stmt->fetchAll($fetchMode);
+    }
+
+    public static function executeQuery($query, $params = [], $fetchMode = PDO::FETCH_OBJ)
+    {
+        try {
+            $instance = new static;
+            $stmt = $instance->pdo->prepare($query);
+            foreach ($params as $param => $value) {
+                $stmt->bindValue(":{$param}", $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+            }
+            $stmt->execute();
+            return $stmt->fetchAll($fetchMode);
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return [];
+        }
     }
 
     private function resetQuery()
@@ -239,7 +334,7 @@ abstract class Model
     public function checkExistence($field, $value)
     {
         $sql = "SELECT 1 FROM {$this->table} WHERE {$field} = :value LIMIT 1";
-        $result = $this->executeQuery($sql, ['value' => $value], PDO::FETCH_ASSOC);
+        $result = $this->staticQuery($sql, ['value' => $value], PDO::FETCH_ASSOC);
         return !empty($result);
     }
 }

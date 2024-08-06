@@ -12,21 +12,22 @@
         <div class="aside-menu overflow-hidden">
             <nav id="stacked-menu" class="stacked-menu">
                 <ul class="menu">
-                    <li class="menu-item <?php echo hasActive(''); ?>">
-                        <a href="<?php route('') ?>" class="menu-link"><span class="menu-icon fas fa-home"></span> <span class="menu-text">Dashboard</span></a>
+                    <li class="menu-item <?php echo hasActive('/'); ?>">
+                        <a href="<?php routeTo('dashboard') ?>" class="menu-link"><span class="menu-icon fas fa-home"></span> <span class="menu-text">Dashboard</span></a>
                     </li>
                     
-                    <li class="menu-item has-child <?php echo hasActive('users/add-user') || hasActive('users/all-users') ? 'has-active' : ''; ?>">
+                    <li class="menu-item has-child <?php echo hasActive('users/create') || hasActive('users') ? 'has-active' : ''; ?>">
                         <a href="#" class="menu-link"><span class="menu-icon oi oi-person"></span> <span class="menu-text">Users</span></a>
                         <ul class="menu">
-                            <li class="menu-item <?php echo hasActive('users/add-user'); ?>">
-                                <a href="<?php route('users/add-user') ?>" class="menu-link">Add User</a>
+                            <li class="menu-item <?php echo hasActive('users/create'); ?>">
+                                <a href="<?php routeTo('users.create') ?>" class="menu-link">Add User</a>
                             </li>
-                            <li class="menu-item <?php echo hasActive('users/all-users'); ?>">
-                                <a href="<?php route('users/all-users') ?>" class="menu-link">All Users</a>
+                            <li class="menu-item <?php echo hasActive('users'); ?>">
+                                <a href="<?php routeTo('users.index') ?>" class="menu-link">All Users</a>
                             </li>
                         </ul>
                     </li>
+                    
                 </ul>
             </nav>
         </div>

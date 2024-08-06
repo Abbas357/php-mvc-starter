@@ -9,12 +9,12 @@ layoutTop('Login', [
 
   <header id="auth-header" class="auth-header" style="background-image: url(<?php asset('images/illustration/img-1.png') ?> );">
     <h1>
-      <img src="<?php asset('images/logo.png') ?>" width="200px" height="60px" alt="Logo">
+      <img src="<?php asset('images/logo.png') ?>" width="200px" height="50px" alt="Logo">
       <span class="sr-only">Sign In</span>
     </h1>
     <p>Fill the Credentials</p>
   </header><!-- form -->
-  <form class="auth-form" action="<?php routeTo('login') ?>" method="post">
+  <form class="auth-form" action="<?php routeTo('auth.login') ?>" method="post">
     <!-- .form-group -->
     <div class="form-group">
     <?php if(isset($error)){

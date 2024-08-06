@@ -1,5 +1,136 @@
 <?php
 
+function authenticated()
+{
+    return (isset($_SESSION['user_id'])) ? true : false;
+}
+
+function authUser()
+{
+    if (isset($_SESSION['user_id'])) {
+        $userId = $_SESSION['user_id'];
+        $sql = "SELECT * FROM users WHERE id = :id";
+
+        try {
+            $stmt = $GLOBALS['pdo']->prepare($sql);
+            $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+            return $result ?: null;
+        } catch (PDOException $e) {
+            error_log("Database query failed: " . $e->getMessage());
+            return null;
+        }
+    }
+    return null;
+}
+
+function checkInput($var)
+{
+    $var = stripcslashes($var);
+    $var = trim($var);
+    $var = htmlspecialchars($var, ENT_QUOTES, 'UTF-8');
+    return $var;
+}
+
+function redirectTo($path)
+{
+    $url = rtrim(config('app.url'), '/') . '/' . ltrim($path, '/');
+    if (headers_sent()) {
+        throw new RuntimeException('Headers already sent.');
+    }
+    header('Location: ' . $url);
+    exit();
+}
+
+function redirectBack($fallback = 'index')
+{
+    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+    if ($referer) {
+        redirectTo(parse_url($referer, PHP_URL_PATH));
+    } else {
+        redirectTo($fallback);
+    }
+}
+
+function setFlash($key, $message)
+{
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+    $_SESSION['flash_messages'][$key] = $message;
+}
+
+function getFlash()
+{
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+    $messages = $_SESSION['flash_messages'] ?? [];
+    unset($_SESSION['flash_messages']);
+
+    return $messages;
+}
+
+function route($dir, $echo = true)
+{
+    $url = config('app.url') . $dir;
+    if ($echo) {
+        echo $url;
+        return;
+    }
+    return $url;
+}
+
+function routeTo($name, $params = [])
+{
+    $routeUrl = \App\Support\Router::route($name, $params);
+    echo config('app.url') . $routeUrl;
+}
+
+function redirectToRoute($name, $parameters = [])
+{
+    $route = \App\Support\Router::getUriForNamedRoute($name);
+    if (!$route) {
+        throw new \Exception("No route found with the name: $name");
+    }
+    $uri = $route['uri'];
+    foreach ($parameters as $key => $value) {
+        $uri = str_replace("{{$key}}", $value, $uri);
+    }
+    header("Location:" . config('app.url') .'/'. trim($uri, '/'));
+    exit;
+}
+
+function request_url()
+{
+    if ($_SERVER['HTTP_HOST'] == 'localhost') {
+        $array_uri = explode('/', $_SERVER['REQUEST_URI']);
+        return implode('/', array_slice($array_uri, 2));
+    } else {
+        return implode('/', array_slice(explode('/', $_SERVER['REQUEST_URI']), 1));
+    }
+}
+
+function hasActive($route, $output = 'has-active')
+{
+    $currentRoute = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/', strpos($_SERVER['REQUEST_URI'], '/') + 1) + 1);
+    return $currentRoute === trim($route, '/') ? $output : '';
+}
+
+function view($viewName, $data = [])
+{
+    extract($data);
+    $viewPath = "../views/{$viewName}.php";
+    if (file_exists($viewPath)) {
+        require $viewPath;
+    } else {
+        http_response_code(404);
+        require "../views/errors/404.php";
+    }
+}
+
 function request($key = null)
 {
     $request = new \App\Support\Request;
@@ -8,7 +139,6 @@ function request($key = null)
     }
     return $request;
 }
-
 
 function response()
 {
@@ -36,30 +166,101 @@ function pdo()
     return $pdo;
 }
 
-function authenticated()
+function config($key, $default = null)
 {
-    return (isset($_SESSION['user_id'])) ? true : false;
-}
+    static $config;
+    if (!$config) {
+        $config = require __DIR__ . '/config.php';
+    }
+    $keys = explode('.', $key);
+    $value = $config;
 
-function authUser()
-{
-    if (isset($_SESSION['user_id'])) {
-        $userId = $_SESSION['user_id'];
-        $sql = "SELECT * FROM users WHERE id = :id";
-
-        try {
-            $stmt = $GLOBALS['pdo']->prepare($sql);
-            $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
-            $stmt->execute();
-
-            $result = $stmt->fetch(PDO::FETCH_OBJ);
-            return $result ?: null;
-        } catch (PDOException $e) {
-            error_log("Database query failed: " . $e->getMessage());
-            return null;
+    foreach ($keys as $key) {
+        if (isset($value[$key])) {
+            $value = $value[$key];
+        } else {
+            return $default;
         }
     }
-    return null;
+
+    return $value;
+}
+
+function asset($file, $echo = true)
+{
+    $url = config('app.url') .'/'. $file;
+    if ($echo) {
+        echo $url;
+        return;
+    }
+    return $url;
+}
+
+function old($key, $default = '') {
+    if (isset($_SESSION['old_input'][$key])) {
+        return $_SESSION['old_input'][$key];
+    }
+    return $default;
+}
+
+function method($httpMethod)
+{
+    $validMethods = ['PUT', 'PATCH', 'DELETE'];
+
+    if (in_array(strtoupper($httpMethod), $validMethods)) {
+        echo '<input type="hidden" name="_method" value="' . htmlspecialchars(strtoupper($httpMethod), ENT_QUOTES, 'UTF-8') . '">';
+    }
+
+    echo '';
+}
+
+function abort($code) {
+    $viewsPath = $viewsPath = '../views/errors/';
+    http_response_code($code);
+    switch ($code) {
+        case 401:
+            $viewFile = $viewsPath . '401.php';
+            break;
+        case 403:
+            $viewFile = $viewsPath . '403.php';
+            break;
+        case 404:
+            $viewFile = $viewsPath . '404.php';
+            break;
+        default:
+            $viewFile = $viewsPath . 'default.php';
+            break;
+    }
+    if (file_exists($viewFile)) {
+        include $viewFile;
+    } else {
+        echo "<h1>Error $code</h1>";
+        echo "<p>An error occurred.</p>";
+    }
+    exit;
+}
+
+function env($key, $default = null)
+{
+    static $envVars = null;
+
+    if ($envVars === null) {
+        $envVars = [];
+        if (file_exists(__DIR__ . '/../.env')) {
+            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos(trim($line), '#') === 0) {
+                    continue;
+                }
+                list($name, $value) = explode('=', $line, 2);
+                $name = trim($name);
+                $value = trim($value);
+                $envVars[$name] = $value;
+            }
+        }
+    }
+
+    return $envVars[$key] ?? $default;
 }
 
 function dd(...$vars)
@@ -115,261 +316,22 @@ function dd(...$vars)
 
     die();
 }
-
-function checkInput($var)
-{
-    $var = stripcslashes($var);
-    $var = trim($var);
-    $var = htmlspecialchars($var, ENT_QUOTES, 'UTF-8');
-    return $var;
-}
-
-function redirectTo($path)
-{
-    $url = rtrim(config('app.url'), '/') . '/' . ltrim($path, '/');
-    if (headers_sent()) {
-        throw new RuntimeException('Headers already sent.');
-    }
-    header('Location: ' . $url);
-    exit();
-}
-
-function redirectBack($fallback = 'index')
-{
-    $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
-    if ($referer) {
-        redirectTo(parse_url($referer, PHP_URL_PATH));
-    } else {
-        redirectTo($fallback);
-    }
-}
-
-function timeAgo($datetime)
+function ago($datetime)
 {
     $time = strtotime($datetime);
     $current = time();
     $seconds = $current - $time;
-
-    if ($seconds < 60) {
-        return ($seconds == 0) ? ' · now' : ' · ' . $seconds . 's ago';
-    }
-
+    if ($seconds < 60) return ($seconds == 0) ? ' · now' : ' · ' . $seconds . 's ago';
     $minutes = round($seconds / 60);
-    if ($minutes < 60) {
-        return ' · ' . $minutes . 'm ago';
-    }
-
+    if ($minutes < 60) return ' · ' . $minutes . 'm ago';
     $hours = round($seconds / 3600);
-    if ($hours < 24) {
-        return ' · ' . $hours . 'h ago';
-    }
-
+    if ($hours < 24) return ' · ' . $hours . 'h ago';
     $days = round($seconds / 86400);
-    if ($days < 7) {
-        return ' · ' . $days . 'd ago';
-    }
-
+    if ($days < 7) return ' · ' . $days . 'd ago';
     $weeks = round($seconds / 604800);
-    if ($weeks < 4) {
-        return ' · ' . $weeks . 'w ago';
-    }
-
+    if ($weeks < 4) return ' · ' . $weeks . 'w ago';
     $months = round($seconds / 2600640);
-    if ($months < 12) {
-        return ' · ' . date('M j', $time);
-    }
-
+    if ($months < 12) return ' · ' . date('M j', $time);
     $years = round($seconds / 31556952);
     return ' · ' . date('j M Y', $time);
-}
-
-function config($key, $default = null)
-{
-    static $config;
-    if (!$config) {
-        $config = require __DIR__ . '/config.php';
-    }
-    $keys = explode('.', $key);
-    $value = $config;
-
-    foreach ($keys as $key) {
-        if (isset($value[$key])) {
-            $value = $value[$key];
-        } else {
-            return $default;
-        }
-    }
-
-    return $value;
-}
-
-function asset($file, $echo = true)
-{
-    $url = config('app.url') . $file;
-    if ($echo) {
-        echo $url;
-        return;
-    }
-    return $url;
-}
-
-function route($dir, $echo = true)
-{
-    $url = config('app.url') . $dir;
-    if ($echo) {
-        echo $url;
-        return;
-    }
-    return $url;
-}
-
-function routeTo($name, $params = [])
-{
-    $routeUrl = \App\Support\Router::route($name, $params);
-    echo config('app.url') . $routeUrl;
-}
-
-function setFlash($key, $message)
-{
-    if (!isset($_SESSION)) {
-        session_start();
-    }
-    $_SESSION['flash_messages'][$key] = $message;
-}
-
-function getFlash()
-{
-    if (!isset($_SESSION)) {
-        session_start();
-    }
-    $messages = $_SESSION['flash_messages'] ?? [];
-    unset($_SESSION['flash_messages']);
-
-    return $messages;
-}
-
-function old($key, $default = '') {
-    if (isset($_SESSION['old_input'][$key])) {
-        return $_SESSION['old_input'][$key];
-    }
-    return $default;
-}
-
-function abort($code) {
-    $viewsPath = $viewsPath = '../views/errors/';
-    http_response_code($code);
-    switch ($code) {
-        case 401:
-            $viewFile = $viewsPath . '401.php';
-            break;
-        case 403:
-            $viewFile = $viewsPath . '403.php';
-            break;
-        case 404:
-            $viewFile = $viewsPath . '404.php';
-            break;
-        default:
-            $viewFile = $viewsPath . 'default.php';
-            break;
-    }
-    if (file_exists($viewFile)) {
-        include $viewFile;
-    } else {
-        echo "<h1>Error $code</h1>";
-        echo "<p>An error occurred.</p>";
-    }
-    exit;
-}
-
-function redirectToRoute($name, $parameters = [])
-{
-    $route = \App\Support\Router::getUriForNamedRoute($name);
-    if (!$route) {
-        throw new \Exception("No route found with the name: $name");
-    }
-    $uri = $route['uri'];
-    foreach ($parameters as $key => $value) {
-        $uri = str_replace("{{$key}}", $value, $uri);
-    }
-    header("Location:" . config('app.url') . trim($uri, '/'));
-    exit;
-}
-
-// function redirectToRoute($name, $params = [])
-// {
-//     try {
-//         $uri = \App\Support\Router::getUriForNamedRoute($name);
-//         if ($uri === null) {
-//             throw new \Exception("Route [$name] not defined.");
-//         }
-//         foreach ($params as $key => $value) {
-//             $uri = str_replace("{{$key}}", $value, $uri);
-//         }
-//         header("Location:" . config('app.url') . trim($uri, '/'));
-//         exit;
-//     } catch (\Exception $e) {
-//         die($e->getMessage());
-//     }
-// }
-
-function method($httpMethod)
-{
-    $validMethods = ['PUT', 'PATCH', 'DELETE'];
-
-    if (in_array(strtoupper($httpMethod), $validMethods)) {
-        echo '<input type="hidden" name="_method" value="' . htmlspecialchars(strtoupper($httpMethod), ENT_QUOTES, 'UTF-8') . '">';
-    }
-
-    echo '';
-}
-
-function request_url()
-{
-    if ($_SERVER['HTTP_HOST'] == 'localhost') {
-        $array_uri = explode('/', $_SERVER['REQUEST_URI']);
-        return implode('/', array_slice($array_uri, 2));
-    } else {
-        return implode('/', array_slice(explode('/', $_SERVER['REQUEST_URI']), 1));
-    }
-}
-
-function view($viewName, $data = [])
-{
-    extract($data);
-    $viewPath = "../views/{$viewName}.php";
-    if (file_exists($viewPath)) {
-        require $viewPath;
-    } else {
-        http_response_code(404);
-        require "../views/errors/404.php";
-    }
-}
-
-function hasActive($route, $output = 'has-active')
-{
-    $currentRoute = substr($_SERVER['REQUEST_URI'], strpos($_SERVER['REQUEST_URI'], '/', strpos($_SERVER['REQUEST_URI'], '/') + 1) + 1);
-    return $currentRoute === trim($route, '/') ? $output : '';
-}
-
-function env($key, $default = null)
-{
-    static $envVars = null;
-
-    if ($envVars === null) {
-        $envVars = [];
-        if (file_exists(__DIR__ . '/../.env')) {
-            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            foreach ($lines as $line) {
-                if (strpos(trim($line), '#') === 0) {
-                    continue;
-                }
-                list($name, $value) = explode('=', $line, 2);
-                $name = trim($name);
-                $value = trim($value);
-                $envVars[$name] = $value;
-            }
-        }
-    }
-
-    return $envVars[$key] ?? $default;
 }

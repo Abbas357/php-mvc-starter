@@ -7,34 +7,34 @@ class Router
     protected static $routes = [];
     protected static $namedRoutes = [];
 
-    public static function get($uri, $modelMethod)
+    public static function get($uri, $controllerMethod)
     {
-        return self::addRoute('GET', $uri, $modelMethod);
+        return self::addRoute('GET', $uri, $controllerMethod);
     }
 
-    public static function post($uri, $modelMethod)
+    public static function post($uri, $controllerMethod)
     {
-        return self::addRoute('POST', $uri, $modelMethod);
+        return self::addRoute('POST', $uri, $controllerMethod);
     }
 
-    public static function patch($uri, $modelMethod)
+    public static function patch($uri, $controllerMethod)
     {
-        return self::addRoute('PATCH', $uri, $modelMethod);
+        return self::addRoute('PATCH', $uri, $controllerMethod);
     }
 
-    public static function put($uri, $modelMethod)
+    public static function put($uri, $controllerMethod)
     {
-        return self::addRoute('PUT', $uri, $modelMethod);
+        return self::addRoute('PUT', $uri, $controllerMethod);
     }
 
-    public static function delete($uri, $modelMethod)
+    public static function delete($uri, $controllerMethod)
     {
-        return self::addRoute('DELETE', $uri, $modelMethod);
+        return self::addRoute('DELETE', $uri, $controllerMethod);
     }
 
-    protected static function addRoute($method, $uri, $modelMethod)
+    protected static function addRoute($method, $uri, $controllerMethod)
     {
-        self::$routes[$method][$uri] = $modelMethod;
+        self::$routes[$method][$uri] = $controllerMethod;
         return new static($method, $uri);
     }
 
@@ -73,13 +73,13 @@ class Router
         $uri = trim($requestUri, '/');
         $method = strtoupper($requestMethod);
 
-        foreach (self::$routes[$method] as $routeUri => $modelMethod) {
+        foreach (self::$routes[$method] as $routeUri => $controllerMethod) {
             $routePattern = preg_replace('/\{[^\}]+\}/', '([^/]+)', $routeUri);
             $routePattern = "@^" . trim($routePattern, '/') . "$@";
 
             if (preg_match($routePattern, $uri, $matches)) {
                 array_shift($matches); // Remove the full match
-                return self::callModelMethod($modelMethod, $matches);
+                return self::callControllerMethod($controllerMethod, $matches);
             }
         }
 
@@ -87,22 +87,22 @@ class Router
         require "../views/errors/404.php";
     }
 
-    protected static function callModelMethod($modelMethod, $params = [])
+    protected static function callControllerMethod($controllerMethod, $params = [])
     {
-        list($modelClass, $method) = explode('@', $modelMethod);
+        list($controllerClass, $method) = explode('@', $controllerMethod);
 
-        $modelClass = "\\App\\Models\\$modelClass";
-        if (!class_exists($modelClass)) {
-            throw new \Exception("Model $modelClass not found");
+        $controllerClass = "\\App\\Controllers\\$controllerClass";
+        if (!class_exists($controllerClass)) {
+            throw new \Exception("Controller $controllerClass not found");
         }
 
-        $modelInstance = new $modelClass();
+        $controllerInstance = new $controllerClass();
         
-        if (!method_exists($modelInstance, $method)) {
-            throw new \Exception("Method $method not found in model $modelClass");
+        if (!method_exists($controllerInstance, $method)) {
+            throw new \Exception("Method $method not found in model $controllerClass");
         }
         
-        return call_user_func_array([$modelInstance, $method], $params);
+        return call_user_func_array([$controllerInstance, $method], $params);
     }
 
     public static function getUriForNamedRoute($name)

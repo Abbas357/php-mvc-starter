@@ -5,7 +5,7 @@
         <div class="top-bar-brand">
             
             <button class="hamburger hamburger-squeeze mr-2" type="button" data-toggle="aside-menu" aria-label="toggle aside menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button> 
-            <a href="<?php route('') ?>">
+            <a href="<?php route('/') ?>">
                 <img src="<?php asset('images/logo.png') ?>" width="150px" height="40px" alt="Logo">
             </a>
         </div>
@@ -272,7 +272,7 @@
                         <div class="dropdown-arrow ml-3"></div>
                         <h6 class="dropdown-header d-none d-md-block d-lg-none"> <?php echo authUser()->name; ?> </h6>
                         <a class="dropdown-item" href="user-profile.php"><span class="dropdown-icon oi oi-person"></span> Profile</a>
-                        <form action="<?php routeTo('logout'); ?>" method="post">
+                        <form action="<?php routeTo('auth.logout'); ?>" method="post">
                             <a class="dropdown-item" href="#logout" onclick="this.closest('form').submit(); return false;">
                                 <span class="dropdown-icon oi oi-account-logout"> </span>Logout
                             </a>

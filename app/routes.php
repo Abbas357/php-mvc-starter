@@ -2,28 +2,18 @@
 
 use App\Support\Router;
 
-/*
-    $url = Router::route('addUserForm');
-    Router::get('', 'Home@index')->name('home');
-    Router::get('users/add-user', 'User@addUserForm')->name('addUserForm');
-    Router::post('users', 'User@store')->name('storeUser');
-    Router::get('users/{id}/edit', 'User@edit')->name('editUser');
+Router::get('/', 'HomeController@index')->name('dashboard');
 
-    $editUrl = Router::route('editUser', ['id' => 1]);
-    Result: 'users/1/edit'
-*/
+// Auth 
+Router::get('/login', 'AuthController@index')->name('auth.index');
+Router::post('/login', 'AuthController@login')->name('auth.login');
+Router::post('/logout', 'AuthController@logout')->name('auth.logout');
 
-Router::get('', 'User@index')->name('dashboard');
-Router::get('login', 'User@loginView')->name('login.view');
-Router::post('login', 'User@login')->name('login');
-Router::post('logout', 'User@logout')->name('logout');
-Router::get('users/add-user', 'User@addUserForm')->name('add.user.view');
-Router::post('users/add-user', 'User@createUser')->name('add.user');
-Router::get('users/all-users', 'User@allUsers')->name('all.users');
-Router::get('users/{id}/edit', 'User@editUser')->name('user.edit');
-Router::get('users/{id}', 'User@getUser')->name('user.show');
-Router::delete('users/{id}', 'User@deleteUser')->name('user.delete');
-
-// Router::middleware([AuthMiddleware::class])->group(function() {
-//     Router::get('users/{id}', 'User@getUser')->name('user.show');
-// });
+// Users
+Router::get('/users', 'UserController@index')->name('users.index');
+Router::get('/users/create', 'UserController@create')->name('users.create');
+Router::post('/users', 'UserController@store')->name('users.store');
+Router::get('/users/{id}', 'UserController@show')->name('users.show');
+Router::get('/users/{id}/edit', 'UserController@edit')->name('users.edit');
+Router::patch('/users/{id}', 'UserController@update')->name('users.update');
+Router::delete('/users/{id}', 'UserController@delete')->name('users.delete');
