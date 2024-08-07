@@ -1,26 +1,17 @@
 <header class="app-header app-header-dark">
-    
     <div class="top-bar">
-        
         <div class="top-bar-brand">
-            
             <button class="hamburger hamburger-squeeze mr-2" type="button" data-toggle="aside-menu" aria-label="toggle aside menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button> 
-            <a href="<?php route('/') ?>">
+            <a href="<?php toRoute('dashboard') ?>">
                 <img src="<?php asset('images/logo.png') ?>" width="150px" height="40px" alt="Logo">
             </a>
         </div>
-        
         <div class="top-bar-list">
-            
             <div class="top-bar-item px-2 d-md-none d-lg-none d-xl-none">
-                
                 <button class="hamburger hamburger-squeeze" type="button" data-toggle="aside" aria-label="toggle menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button> 
             </div>
-            
             <div class="top-bar-item top-bar-item-full">
-                
                 <form class="top-bar-search">
-                    
                     <div class="input-group input-group-search dropdown">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><span class="oi oi-magnifying-glass"></span></span>
@@ -28,7 +19,6 @@
                         <div class="dropdown-menu dropdown-menu-rich dropdown-menu-xl ml-n4 mw-100">
                             <div class="dropdown-arrow ml-3"></div>
                             <div class="dropdown-scroll perfect-scrollbar h-auto" style="max-height: 360px">
-                                
                                 <div class="list-group list-group-flush list-group-reflow mb-2">
                                     <h6 class="list-group-header d-flex justify-content-between">
                                         <span>Shortcut</span>
@@ -272,7 +262,7 @@
                         <div class="dropdown-arrow ml-3"></div>
                         <h6 class="dropdown-header d-none d-md-block d-lg-none"> <?php echo authUser()->name; ?> </h6>
                         <a class="dropdown-item" href="user-profile.php"><span class="dropdown-icon oi oi-person"></span> Profile</a>
-                        <form action="<?php routeTo('auth.logout'); ?>" method="post">
+                        <form action="<?php toRoute('auth.logout'); ?>" method="post">
                             <a class="dropdown-item" href="#logout" onclick="this.closest('form').submit(); return false;">
                                 <span class="dropdown-icon oi oi-account-logout"> </span>Logout
                             </a>

@@ -38,6 +38,6 @@ class AuthController extends Controller
         Auth::logout();
         header('Content-Type: application/json');
         setFlash('danger', 'You have been logged out.');
-        redirectTo('login');
+        redirect('login');
     }
 }

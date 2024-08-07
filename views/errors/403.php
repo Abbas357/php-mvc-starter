@@ -19,7 +19,7 @@
             <h3> Access Prohibited! </h3>
             <p class="state-description lead"> Sorry, You do not have permission to access this resource. </p>
             <div class="state-action">
-              <a href="<?php routeTo('dashboard') ?>" class="btn btn-lg btn-light"><i class="fa fa-angle-right"></i> Go Home</a>
+              <a href="<?php toRoute('dashboard') ?>" class="btn btn-lg btn-light"><i class="fa fa-angle-right"></i> Go Home</a>
             </div>
           </div>
         </div>

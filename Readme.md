@@ -10,9 +10,8 @@
 ## Implement Roles and permissions
 
     ```bash
-    $value = password_hash('password', PASSWORD_BCRYPT);
+    $value = password_hash('password', PASSWORD_BCRYPT); $2y$10$E.bHEoyb7KlO4TsSjyWftukJBTZCzUE1b/ampU8cy99UV26d352KS
     ```
-
 ### Step #1:  Assign Roles to Users
     ```python
         $userId = 1; // Example user ID

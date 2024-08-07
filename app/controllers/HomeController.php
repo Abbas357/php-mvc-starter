@@ -12,6 +12,11 @@ class HomeController extends Controller
         return view('dashboard', $data);
     }
 
+    public function data()
+    {
+        return view('layout-blank');
+    }
+
     public function create()
     {
         // Code to show form for creating a new resource

@@ -34,23 +34,13 @@ function checkInput($var)
     return $var;
 }
 
-function redirectTo($path)
-{
-    $url = rtrim(config('app.url'), '/') . '/' . ltrim($path, '/');
-    if (headers_sent()) {
-        throw new RuntimeException('Headers already sent.');
-    }
-    header('Location: ' . $url);
-    exit();
-}
-
-function redirectBack($fallback = 'index')
+function back($fallback = 'index')
 {
     $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
     if ($referer) {
-        redirectTo(parse_url($referer, PHP_URL_PATH));
+        redirect(parse_url($referer, PHP_URL_PATH));
     } else {
-        redirectTo($fallback);
+        redirect($fallback);
     }
 }
 
@@ -73,17 +63,17 @@ function getFlash()
     return $messages;
 }
 
-function route($dir, $echo = true)
+function redirect($path)
 {
-    $url = config('app.url') . $dir;
-    if ($echo) {
-        echo $url;
-        return;
+    $url = rtrim(config('app.url'), '/') . '/' . ltrim($path, '/');
+    if (headers_sent()) {
+        throw new RuntimeException('Headers already sent.');
     }
-    return $url;
+    header('Location: ' . $url);
+    exit();
 }
 
-function routeTo($name, $params = [])
+function toRoute($name, $params = [])
 {
     $routeUrl = \App\Support\Router::route($name, $params);
     echo config('app.url') . $routeUrl;

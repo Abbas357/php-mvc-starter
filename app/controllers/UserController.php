@@ -14,10 +14,22 @@ class UserController extends Controller
 
     public function create()
     {
-        $data = [
-            'title' => 'Add User',
-        ];
-        return view('users/create', $data);
+        return view('users/create');
+    }
+
+    public function data () {
+        $searchable = ['name', 'email', 'designation', 'office'];
+        $records = function ($record) {
+            return [
+                'id' => $record->id,
+                'name' => $record->name,
+                'email' => $record->email,
+                'designation' => $record->designation,
+                'office' => $record->office
+            ];
+        };
+        
+        return $this->DataTable('users', $searchable, $records);
     }
 
     public function store()
@@ -70,7 +82,7 @@ class UserController extends Controller
     }
 
     public function show($id) {
-        $user = User::where('id', '>', 1)->delete();
+        $user = User::find($id);
         return response()->json(['users' => $user]);
     }
 
@@ -79,10 +91,10 @@ class UserController extends Controller
         $deleted = $user->delete();
         if($deleted) {
             setFlash('success', 'User is delete successfully.');
-            redirectToRoute('users.create');
+            redirectToRoute('users.index');
         }
         setFlash('danger', 'There was an error deleting the user.');
-        redirectToRoute('users.create');
+        redirectToRoute('users.index');
     }
 
     private function handleFileUpload($file)

@@ -1,6 +1,6 @@
 <?php
 require_once('../app/init.php');
-if (authenticated()) redirectTo('index');
+if (authenticated()) redirect('index');
 function layoutTop($pageTitle = 'Page', $additionalCSS = [])
 {
     echo "<!DOCTYPE html>

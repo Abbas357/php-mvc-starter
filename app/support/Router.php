@@ -70,8 +70,14 @@ class Router
 
     public static function dispatch($requestUri, $requestMethod)
     {
-        $uri = trim($requestUri, '/');
+        $parsedUrl = parse_url($requestUri);
+        $uri = trim($parsedUrl['path'], '/');
         $method = strtoupper($requestMethod);
+
+        $queryParams = [];
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $queryParams);
+        }
 
         foreach (self::$routes[$method] as $routeUri => $controllerMethod) {
             $routePattern = preg_replace('/\{[^\}]+\}/', '([^/]+)', $routeUri);
@@ -79,7 +85,7 @@ class Router
 
             if (preg_match($routePattern, $uri, $matches)) {
                 array_shift($matches); // Remove the full match
-                return self::callControllerMethod($controllerMethod, $matches);
+                return self::callControllerMethod($controllerMethod, $matches, $queryParams);
             }
         }
 

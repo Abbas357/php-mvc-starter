@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-<form action="<?php routeTo('user.delete', ['id' => $id]); ?>" method="post">
+<form action="<?php toRoute('users.delete', ['id' => $id]); ?>" method="post">
     <?php method('DELETE'); ?>
     <input type="submit" name="login" value="Sign In" class="btn btn-lg btn-primary btn-block">
 </form>

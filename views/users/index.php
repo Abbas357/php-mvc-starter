@@ -29,13 +29,27 @@ layoutTop('Filter Columns', [
                 <a class="nav-link active show" data-toggle="tab" href="#tab1">All</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#tab2">Ongoing</a>
+                <a class="nav-link" data-toggle="tab" href="#tab2">Actve</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#tab3">Completed</a>
+                <a class="nav-link" data-toggle="tab" href="#tab3">Non Active</a>
               </li>
             </ul>
           </div>
+          <!-- <div class="card-body tab-content">
+            <div id="tab1" class="tab-pane fade show active">
+              <h4>All</h4>
+              <p>Content for all tabs.</p>
+            </div>
+            <div id="tab2" class="tab-pane fade">
+              <h4>Active</h4>
+              <p>Content for active tab.</p>
+            </div>
+            <div id="tab3" class="tab-pane fade">
+              <h4>Non Active</h4>
+              <p>Content for non-active tab.</p>
+            </div>
+          </div> -->
           <div class="card-body">
             <div class="form-group">
               <div class="input-group input-group-alt">
@@ -62,10 +76,9 @@ layoutTop('Filter Columns', [
                         <div class="col">
                           <select class="custom-select filter-control filter-column">
                             <option value="1"> Name </option>
-                            <option value="2"> Inventory </option>
-                            <option value="3"> Variants </option>
-                            <option value="4"> Prices </option>
-                            <option value="5"> Sales </option>
+                            <option value="2"> Email </option>
+                            <option value="3"> Designation </option>
+                            <option value="4"> Office </option>
                           </select>
                         </div>
                         <div class="col">
@@ -93,10 +106,9 @@ layoutTop('Filter Columns', [
                         <div class="col">
                           <select class="custom-select filter-control filter-column">
                             <option value="1"> Name </option>
-                            <option value="2"> Inventory </option>
-                            <option value="3"> Variants </option>
-                            <option value="4"> Prices </option>
-                            <option value="5"> Sales </option>
+                            <option value="2"> Email </option>
+                            <option value="3"> Designation </option>
+                            <option value="4"> Office </option>
                           </select>
                         </div>
                         <div class="col">
@@ -142,12 +154,12 @@ layoutTop('Filter Columns', [
                         <div class="dropdown-arrow"></div><a class="dropdown-item" href="#">Select all</a> <a class="dropdown-item" href="#">Unselect all</a>
                         <div class="dropdown-divider"></div><a class="dropdown-item" href="#">Bulk remove</a> <a class="dropdown-item" href="#">Bulk edit</a> <a class="dropdown-item" href="#">Separate actions</a>
                       </div>
-                    </div>
+                    </div> &nbsp; Name
                   </th>
-                  <th> Inventory </th>
-                  <th> Variants </th>
-                  <th> Prices </th>
-                  <th> Sales </th>
+                  <th> Email </th>
+                  <th> Designation </th>
+                  <th> Office </th>
+                  <th> Office </th>
                   <th style="width:100px; min-width:100px;"> &nbsp; </th>
                 </tr>
               </thead>
@@ -170,14 +182,14 @@ layoutTop('Filter Columns', [
   </div>
 </div>
 
-<?php 
+<?php
 layoutBottom([
-    "vendor/datatables/jquery.dataTables.min.js",
-    "vendor/datatables/extensions/buttons/dataTables.buttons.min.js",
-    "vendor/datatables/extensions/buttons/buttons.bootstrap4.min.js",
-    "vendor/datatables/extensions/buttons/buttons.html5.min.js",
-    "vendor/datatables/extensions/buttons/buttons.print.min.js",
-    "js/pages/dataTables.bootstrap.js",
-    "js/pages/datatables-filters-demo.js"
+  "vendor/datatables/jquery.dataTables.min.js",
+  "vendor/datatables/extensions/buttons/dataTables.buttons.min.js",
+  "vendor/datatables/extensions/buttons/buttons.bootstrap4.min.js",
+  "vendor/datatables/extensions/buttons/buttons.html5.min.js",
+  "vendor/datatables/extensions/buttons/buttons.print.min.js",
+  "js/pages/dataTables.bootstrap.js",
+  "js/pages/datatables-filters-demo.js"
 ]);
 ?>

@@ -34,7 +34,7 @@ layoutTop('Basic Form');
         <div class="card">
           <div class="card-body">
             <h3 class="card-title"> Fill all the fields</h3>
-            <form class="needs-validation" action="<?php routeTo('users.store') ?>" method="post" enctype="multipart/form-data" novalidate="">
+            <form class="needs-validation" action="<?php toRoute('users.store') ?>" method="post" enctype="multipart/form-data" novalidate="">
               <div class="form-row">
                 <div class="col-md-6 mb-3">
                   <label for="validationTooltip01">Name<abbr title="Required">*</abbr></label>

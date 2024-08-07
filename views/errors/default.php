@@ -19,7 +19,7 @@
             <h3> Error! </h3>
             <p class="state-description lead"> Sorry, the URL may be misplaced or it's pointing to nothing. </p>
             <div class="state-action">
-              <a href="<?php routeTo('dashboard') ?>" class="btn btn-lg btn-light"><i class="fa fa-angle-right"></i> Go Home</a>
+              <a href="<?php toRoute('dashboard') ?>" class="btn btn-lg btn-light"><i class="fa fa-angle-right"></i> Go Home</a>
             </div>
           </div>
         </div>

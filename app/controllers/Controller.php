@@ -1,42 +1,104 @@
-<?php 
+<?php
 
 namespace App\Controllers;
 
-abstract class Controller {
+use PDO;
 
-    // public function index()
-    // {
-    //     // Code to list all resources
-    // }
+abstract class Controller
+{
+    protected function DataTable($table, $searchColumns, $recordFormatter)
+    {
+        $draw = request()->query('draw') ?? 1;
+        $start = request()->query('start') ?? 0;
+        $rowperpage = request()->query('length') ?? 10;
 
-    // public function create()
-    // {
-    //     // Code to show form for creating a new resource
-    // }
+        $order = request()->query('order');
+        $columns = request()->query('columns');
+        $search = request()->query('search');
 
-    // public function store()
-    // {
-    //     // Code to handle the form submission and save the new resource
-    // }
+        // Initialize default values in case of missing or malformed data
+        $columnIndex = 0;
+        $columnName = $searchColumns[0];
+        $columnSortOrder = 'asc';
+        $searchValue = '';
 
-    // public function show($id)
-    // {
-    //     // Code to display a specific resource by its ID
-    // }
+        // Extract column index and sort order if order array is present
+        if (isset($order[0]['column'])) {
+            $columnIndex = $order[0]['column'];
+        }
+        if (isset($order[0]['dir'])) {
+            $columnSortOrder = $order[0]['dir'];
+        }
 
-    // public function edit($id)
-    // {
-    //     // Code to show the form for editing a specific resource
-    // }
+        // Extract column name if columns array is present and valid
+        if (isset($columns[$columnIndex]['data'])) {
+            // Assuming we want the 'sort' field from the column name array
+            if (is_array($columns[$columnIndex]['data']) && isset($columns[$columnIndex]['data']['sort'])) {
+                $columnName = $columns[$columnIndex]['data']['sort'];
+            } else {
+                error_log("Error: Column data is not properly formatted as an array or 'sort' key is missing.");
+            }
+        } else {
+            error_log("Error: Column index $columnIndex does not exist in columns array.");
+        }
 
-    // public function update($id)
-    // {
-    //     // Code to handle the form submission and update the resource
-    // }
+        // Extract search value if present
+        if (isset($search['value'])) {
+            $searchValue = $search['value'];
+        }
 
-    // public function destroy($id)
-    // {
-    //     // Code to delete a specific resource by its ID
-    // }
+        // Database connection
+        $pdo = pdo();
 
+        // Total records without filtering
+        $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM $table");
+        $stmt->execute();
+        $totalRecords = $stmt->fetch(PDO::FETCH_OBJ)->count;
+
+        // Base query
+        $baseQuery = "SELECT * FROM $table";
+        $params = [];
+
+        // Apply search filter if necessary
+        if (!empty($searchValue)) {
+            $searchQuery = [];
+            foreach ($searchColumns as $column) {
+                $searchQuery[] = "$column LIKE :searchValue";
+            }
+            $baseQuery .= " WHERE " . implode(" OR ", $searchQuery);
+            $params[':searchValue'] = '%' . $searchValue . '%';
+        }
+
+        // Total records with filtering
+        $stmt = $pdo->prepare($baseQuery);
+        $stmt->execute($params);
+        $totalRecordswithFilter = $stmt->rowCount();
+
+        // Apply ordering and pagination
+        $baseQuery .= " ORDER BY $columnName $columnSortOrder LIMIT :start, :rowperpage";
+        $params[':start'] = (int) $start;
+        $params[':rowperpage'] = (int) $rowperpage;
+
+        // Fetch records
+        $stmt = $pdo->prepare($baseQuery);
+        foreach ($params as $param => $value) {
+            $stmt->bindValue($param, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+        $stmt->execute();
+        $records = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        // Format the records
+        $formattedRecords = array_map($recordFormatter, $records);
+
+        // Prepare response
+        $response = [
+            "draw" => intval($draw),
+            "iTotalRecords" => $totalRecords,
+            "iTotalDisplayRecords" => $totalRecordswithFilter,
+            "aaData" => $formattedRecords,
+        ];
+
+        // Return JSON response
+        echo response()->json($response);
+    }
 }

@@ -14,7 +14,7 @@ layoutTop('Login', [
     </h1>
     <p>Fill the Credentials</p>
   </header><!-- form -->
-  <form class="auth-form" action="<?php routeTo('auth.login') ?>" method="post">
+  <form class="auth-form" action="<?php toRoute('auth.login') ?>" method="post">
     <!-- .form-group -->
     <div class="form-group">
     <?php if(isset($error)){

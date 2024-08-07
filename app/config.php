@@ -3,7 +3,7 @@ return [
     'app' => [
         'name' => 'Official Website of Communication and Works Department',
         'env' => env('APP_ENV', 'production'),
-        'debug' => env('APP_DEBUG', false),
+        'debug' => env('APP_DEBUG', true),
         'url' => env('BASE_URL', 'http://localhost/cwmis'),
         'dir' => $_SERVER['DOCUMENT_ROOT'] . '/cwmis',
     ],

@@ -13,17 +13,17 @@
             <nav id="stacked-menu" class="stacked-menu">
                 <ul class="menu">
                     <li class="menu-item <?php echo hasActive('/'); ?>">
-                        <a href="<?php routeTo('dashboard') ?>" class="menu-link"><span class="menu-icon fas fa-home"></span> <span class="menu-text">Dashboard</span></a>
+                        <a href="<?php toRoute('dashboard') ?>" class="menu-link"><span class="menu-icon fas fa-home"></span> <span class="menu-text">Dashboard</span></a>
                     </li>
                     
                     <li class="menu-item has-child <?php echo hasActive('users/create') || hasActive('users') ? 'has-active' : ''; ?>">
                         <a href="#" class="menu-link"><span class="menu-icon oi oi-person"></span> <span class="menu-text">Users</span></a>
                         <ul class="menu">
                             <li class="menu-item <?php echo hasActive('users/create'); ?>">
-                                <a href="<?php routeTo('users.create') ?>" class="menu-link">Add User</a>
+                                <a href="<?php toRoute('users.create') ?>" class="menu-link">Add User</a>
                             </li>
                             <li class="menu-item <?php echo hasActive('users'); ?>">
-                                <a href="<?php routeTo('users.index') ?>" class="menu-link">All Users</a>
+                                <a href="<?php toRoute('users.index') ?>" class="menu-link">All Users</a>
                             </li>
                         </ul>
                     </li>

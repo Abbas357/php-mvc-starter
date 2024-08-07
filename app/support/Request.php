@@ -5,11 +5,15 @@ namespace App\Support;
 class Request
 {
     protected $data;
+    protected $post;
+    protected $get;
     protected $files;
 
     public function __construct()
     {
         $this->data = array_merge($_GET, $_POST);
+        $this->post = array_merge($_POST);
+        $this->get = array_merge($_GET);
         $this->files = $_FILES;
     }
 
@@ -39,13 +43,21 @@ class Request
         return isset($this->files[$key]) && $this->files[$key]['error'] === UPLOAD_ERR_OK;
     }
 
-    public function query($key, $default = null)
+    public function query($key = null, $default = null)
     {
+        if ($key === null) {
+            return $this->get;
+        }
+
         return $_GET[$key] ?? $default;
     }
 
-    public function post($key, $default = null)
+    public function post($key = null, $default = null)
     {
+        if ($key === null) {
+            return $this->post;
+        }
+
         return $_POST[$key] ?? $default;
     }
 

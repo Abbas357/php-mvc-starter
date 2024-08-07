@@ -49,7 +49,9 @@ function () {
           }
         },
         autoWidth: false,
-        ajax: 'http://localhost/cwmis/data/products.json',
+        processing: true,
+        serverSide: true,
+        ajax: 'http://localhost/cwmis/users-data',
         deferRender: true,
         order: [1, 'asc'],
         columns: [{
@@ -65,18 +67,15 @@ function () {
           },
           className: 'align-middle'
         }, {
-          data: 'inventory',
+          data: 'email',
           className: 'align-middle'
         }, {
-          data: 'variant',
+          data: 'designation',
           className: 'align-middle'
         }, {
-          data: 'prices',
+          data: 'office',
           className: 'align-middle'
-        }, {
-          data: 'sales',
-          className: 'align-middle'
-        }, {
+        }, {  
           data: 'id',
           className: 'align-middle text-right',
           orderable: false,
@@ -161,7 +160,7 @@ function () {
             };
 
             for (var x = 0; x < arr.length; x++) {
-              _loop(x);
+              _loop(x); 
             }
 
             pattern = '^(' + exp + ')$';
