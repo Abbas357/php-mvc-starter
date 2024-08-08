@@ -38,10 +38,16 @@ function () {
     value: function table() {
       return $('#myTable').DataTable({
         dom: "<'text-muted'Bi>\n        <'table-responsive'tr>\n        <'mt-4'p>",
-        buttons: ['copyHtml5', {
-          extend: 'print',
-          autoPrint: false
-        }],
+        buttons: [
+          'copyHtml5',
+          'csvHtml5',
+          'excelHtml5',
+          'pdfHtml5',
+          {
+              extend: 'print',
+              autoPrint: false
+          }
+      ],
         language: {
           paginate: {
             previous: '<i class="fa fa-lg fa-angle-left"></i>',
