@@ -168,18 +168,114 @@ abstract class Model
         }
     }
 
-
     public static function where($field, $operator = '=', $value = null)
     {
+        $numArgs = func_num_args();
+
+        if ($numArgs === 2) {
+            $value = $operator;
+            $operator = '='; 
+        }
+
         $instance = new static();
         $instance->query = "SELECT * FROM {$instance->table} WHERE {$field} {$operator} :value";
         $instance->params['value'] = $value;
         return $instance;
     }
 
+    public function filter($field, $operator = '=', $value = null)
+    {
+        $numArgs = func_num_args();
+
+        if ($numArgs === 2) {
+            $value = $operator;
+            $operator = '=';
+        }
+
+        // Add a FILTER condition (assuming similar to WHERE)
+        if (strpos($this->query, 'WHERE') === false) {
+            $this->query .= " WHERE {$field} {$operator} :value";
+        } else {
+            $this->query .= " AND {$field} {$operator} :value";
+        }
+        $this->params['value'] = $value;
+        
+        return $this;
+    }
+
+    public static function whereBetween($field, $start, $end = null)
+    {
+        $numArgs = func_num_args();
+
+        if ($numArgs === 3) {
+            $instance = new static();
+            $instance->query = "SELECT * FROM {$instance->table} WHERE {$field} BETWEEN :start AND :end";
+            $instance->params['start'] = $start;
+            $instance->params['end'] = $end;
+        } elseif ($numArgs === 2) {
+            $end = $start;
+            $instance = new static();
+            $instance->query = "SELECT * FROM {$instance->table} WHERE {$field} BETWEEN :start AND :end";
+            $instance->params['start'] = $end;
+            $instance->params['end'] = $end;
+        }
+
+        return $instance;
+    }
+
+    public static function whereIn($field, $values)
+    {
+        $instance = new static();
+        $placeholders = implode(',', array_fill(0, count($values), '?'));
+        $instance->query = "SELECT * FROM {$instance->table} WHERE {$field} IN ({$placeholders})";
+        $instance->params = $values;
+        return $instance;
+    }
+
     public function orWhere($field, $operator = '=', $value = null)
     {
+        $numArgs = func_num_args();
+        if ($numArgs === 2) {
+            $value = $operator;
+            $operator = '=';
+        }
         $this->query .= " OR {$field} {$operator} :value";
+        $this->params['value'] = $value;
+        return $this;
+    }
+    
+    public static function whereNotNull($field)
+    {
+        $instance = new static();
+        $instance->query = "SELECT * FROM {$instance->table} WHERE {$field} IS NOT NULL";
+        return $instance;
+    }
+
+    public static function whereNull($field)
+    {
+        $instance = new static();
+        $instance->query = "SELECT * FROM {$instance->table} WHERE {$field} IS NULL";
+        return $instance;
+    }
+
+    public static function select(...$fields)
+    {
+        $instance = new static();
+        $fieldsList = implode(', ', $fields);
+        $instance->query = "SELECT {$fieldsList} FROM {$instance->table}";
+        return $instance;
+    }
+
+    public function having($field, $operator = '=', $value = null)
+    {
+        $numArgs = func_num_args();
+
+        if ($numArgs === 2) {
+            $value = $operator;
+            $operator = '='; 
+        }
+
+        $this->query .= " HAVING {$field} {$operator} :value";
         $this->params['value'] = $value;
         return $this;
     }
@@ -187,6 +283,12 @@ abstract class Model
     public function orderBy($field, $direction = 'ASC')
     {
         $this->query .= " ORDER BY {$field} {$direction}";
+        return $this;
+    }
+
+    public function groupBy($field)
+    {
+        $this->query .= " GROUP BY {$field}";
         return $this;
     }
 

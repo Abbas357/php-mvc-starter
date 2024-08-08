@@ -82,7 +82,7 @@ class UserController extends Controller
     }
 
     public function show($id) {
-        $user = User::find($id);
+        $user = User::where('status', 1)->filter('office', 'IT')->get();
         return response()->json(['users' => $user]);
     }
 
