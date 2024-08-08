@@ -21,7 +21,6 @@ abstract class Controller
         $columnName = $searchColumns[0];
         $columnSortOrder = 'asc';
         $searchValue = '';
-
         // Extract column index and sort order if order array is present
         if (isset($order[0]['column'])) {
             $columnIndex = $order[0]['column'];
@@ -66,14 +65,12 @@ abstract class Controller
             }
             $params[':searchValue'] = '%' . $searchValue . '%';
         }
-
         // Apply individual column filters if present
         $columnSearchQuery = [];
         foreach ($columns as $index => $column) {
             if (isset($column['search']['value']) && !empty($column['search']['value'])) {
                 $filterValue = $column['search']['value'];
                 $filterOperator = request()->query("filterOperator$index") ?? 'contain';
-
                 switch ($filterOperator) {
                     case 'contain':
                         $columnSearchQuery[] = "{$column['data']} LIKE :filterValue$index";
@@ -122,7 +119,6 @@ abstract class Controller
         if (!empty($whereClauses)) {
             $baseQuery .= ' WHERE ' . implode(' AND ', $whereClauses);
         }
-
         // Total records with filtering
         $stmt = $pdo->prepare($baseQuery);
         $stmt->execute($params);
