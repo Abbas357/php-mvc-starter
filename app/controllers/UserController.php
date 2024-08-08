@@ -82,11 +82,7 @@ class UserController extends Controller
     }
 
     public function show($id) {
-<<<<<<< Updated upstream
-        $user = User::where('status', 1)->filter('office', 'IT')->get();
-=======
-        $user = User::where('id', '>', 47)->count();
->>>>>>> Stashed changes
+        $user = User::where('status', 1)->get();
         return response()->json(['users' => $user]);
     }
 
