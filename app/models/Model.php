@@ -116,24 +116,6 @@ abstract class Model
         return true;
     }
 
-    // public function delete()
-    // {
-    //     if (!$this->id) {
-    //         throw new Exception("ID is required for delete operation.");
-    //     }
-
-    //     $this->query = "DELETE FROM {$this->table} WHERE id = :id";
-    //     try {
-    //         $stmt = $this->pdo->prepare($this->query);
-    //         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
-    //         $stmt->execute();
-    //     } catch (PDOException $e) {
-    //         error_log($e->getMessage());
-    //         return false;
-    //     }
-    //     return true;
-    // }
-
     public function delete()
     {
         if ($this->id) {
@@ -181,26 +163,6 @@ abstract class Model
         $instance->query = "SELECT * FROM {$instance->table} WHERE {$field} {$operator} :value";
         $instance->params['value'] = $value;
         return $instance;
-    }
-
-    public function filter($field, $operator = '=', $value = null)
-    {
-        $numArgs = func_num_args();
-
-        if ($numArgs === 2) {
-            $value = $operator;
-            $operator = '=';
-        }
-
-        // Add a FILTER condition (assuming similar to WHERE)
-        if (strpos($this->query, 'WHERE') === false) {
-            $this->query .= " WHERE {$field} {$operator} :value";
-        } else {
-            $this->query .= " AND {$field} {$operator} :value";
-        }
-        $this->params['value'] = $value;
-        
-        return $this;
     }
 
     public static function whereBetween($field, $start, $end = null)
