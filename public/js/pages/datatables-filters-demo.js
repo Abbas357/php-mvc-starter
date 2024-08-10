@@ -79,12 +79,11 @@ var AdvanceDataTablesDemo =
               url: "http://localhost/cwmis/users-data",
               type: "GET",
               data: function (d) {
-                // Include filter columns in the request
                 $("#filter-columns .filter-row").each(function () {
                   var column = $(this).find(".filter-column").val();
                   var value = $(this).find(".filter-value").val();
                   if (column && value) {
-                    d.columns[column].search.value = value; // Set the value for the corresponding column
+                    d.columns[column].search.value = value;
                   }
                 });
               },
@@ -101,8 +100,8 @@ var AdvanceDataTablesDemo =
               {
                 data: "name",
                 className: "align-middle",
-                sort: 'name',
-                search: 'name'
+                sort: "name",
+                search: "name",
               },
               {
                 data: "email",

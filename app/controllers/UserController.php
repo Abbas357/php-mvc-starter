@@ -34,20 +34,19 @@ class UserController extends Controller
 
     public function store()
     {
+        request()->validate([
+            'name' => 'required|min:4|max:20',
+            'email' => 'required|email|unique:users',
+            'mobile' => 'required|mobile',
+            'office' => 'required',
+            'designation' => 'required',
+            'password' => 'required|strong_password',
+            'profile_pic' => 'file|image|valid_file|nullable',
+        ]);
         $user = new User();
         $_SESSION['old_input'] = request()->all();
         $email = request('email');
         $password = request('password');
-        if (empty($email) || empty($password)) {
-            setFlash('danger', 'Email and password are required fields.');
-            redirectToRoute('users.create');
-        }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            setFlash('danger', 'Invalid email format.');
-            redirectToRoute('users.create');
-        }
-
         $data = [
             'name' => request('name'),
             'email' => $email,
